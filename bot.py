@@ -2,29 +2,43 @@ import os
 from dotenv import load_dotenv
 import logging
 import discord
+from discord.ext import commands
+from discord_slash import SlashCommand, SlashContext
+from discord_slash.utils.manage_commands import create_option
 import re
 import time
 import random
+import asyncio
+import sys
+import socket
+import io
+import base64
+from mcstatus import MinecraftServer
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+DEBUG = os.getenv('DEBUG_GUILD')
 
-client = discord.Client()
+bot = commands.Bot("c!")
 intents = discord.Intents(messages=True, guilds=True)
+if DEBUG:
+    slash = SlashCommand(bot, sync_commands=True, debug_guild=DEBUG)
+else:
+    slash = SlashCommand(bot, sync_commands=True)
 
 wahcd = time.time()
 cricketcd = wahcd
 cricketcd2 = False
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print('*hacker voice* I\'m in. Started up as {0.user}'.format(client))
+    print(f"*hacker voice* I\'m in. Started up as {bot.user}")
 
 
-@client.event
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
     global wahcd
@@ -78,5 +92,70 @@ async def on_message(message):
         await message.channel.send(random.choice(Waluigi))
 
 
+@slash.subcommand(base="bot",
+                  name="ping",
+                  description="Returns info about the bot's ping")
+async def bot_ping(ctx):
+    await ctx.send(f"Pong! {round(bot.latency * 1000)} ms.")
+
+
+@slash.subcommand(base="minecraft",
+                  name="ping",
+                  description="Returns info about a server",
+                  options=[
+                      create_option(
+                          name="server",
+                          description="Address of the server",
+                          option_type=3,
+                          required=True
+                      )
+                  ])
+async def server_ping(ctx, server):
+    await ctx.defer()
+    try:
+        target = MinecraftServer.lookup(server)
+        status = target.status()
+
+        embed = discord.Embed(title=server, color=0xc84268)
+        embed.add_field(name="Version", value=status.version.name)
+        embed.add_field(
+            name="Players", value=f"{status.players.online}/{status.players.max}")
+        embed.add_field(name="Ping", value=f"{round(status.latency)} ms")
+        try:
+            description = re.sub(r'^\s+|§.', '', status.description)
+            description = re.sub(r'\n\s*', r'\n', description)
+            embed.add_field(name="Description",
+                            value=f"```{description}```", inline=False)
+        except:
+            pass
+        try:
+            query = target.query()
+            embed.add_field(name="Online", value='\n'.join(query.players.names))
+            embed.add_field(name="Plugins", value='\n'.join(query.software.plugins))
+        except:
+            pass
+        # thumbnails are hard
+        try:
+            data = base64.b64decode(
+                status.favicon.split(',', 1)[-1])
+            file = discord.File(fp=io.BytesIO(data),filename="server_favicon.png")
+            embed.set_thumbnail(url="attachment://server_favicon.png")
+            await ctx.send(file=file, embed=embed)
+        except:
+            print(sys.exc_info())
+            await ctx.send(embed=embed)
+    except socket.timeout:
+        embed = discord.Embed(
+            title=server, description="timed out :(")
+        await ctx.send(embed=embed)
+        print(sys.exc_info())
+
+    except:
+        embed = discord.Embed(
+            title=server, description="halp am havin a stronk")
+        await ctx.send(embed=embed)
+        print(sys.exc_info())
+
+
 logging.basicConfig(level=logging.WARNING)
-client.run(TOKEN)
+bot.run(TOKEN)
