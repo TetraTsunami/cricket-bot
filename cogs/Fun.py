@@ -6,15 +6,6 @@ import re
 import time
 import random
 import json
-import asyncio
-
-import datetime
-
-epoch = datetime.datetime.utcfromtimestamp(0)
-
-wahcd = time.time()
-cricketcd = wahcd
-cricketcd2 = False
 
 class Fun(commands.Cog):
     def __init__(self, bot):
