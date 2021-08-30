@@ -42,7 +42,9 @@ class Discord(commands.Cog):
             await ctx.send(embed=embed,hidden=hidden)
             
 def formatdate(target: datetime.datetime):
-    return target.strftime("%A, %B %d, %Y %I:%M %p")
-        
+    target = target.replace(tzinfo=datetime.timezone.utc)
+    target_cst = target.astimezone(datetime.timezone(datetime.timedelta(hours=-6)))
+    return target_cst.strftime("%A, %B %d, %Y %I:%M %p CST")
+
 def setup(bot):
     bot.add_cog(Discord(bot))
