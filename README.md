@@ -19,8 +19,7 @@ If you want to run in Docker, pull the repo, create the .env, and run
 `docker compose up -d --build` and you should be good.
 
 ### Todo
-- Proper command cooldowns (it's currently a global timer which is. bad? it's bad.)
 - Proper config (ability to disable the fun commands if you're *lame*)
-- Upgrade to the /minecraft ping command to make querying plugins optional, and another to make Cricket ping the server again every so often and update the message
-- /discord commands- /discord user to easily get the avatar of a user and other goodies, /discord emote to easily grab an emoji
+- Upgrade to the /minecraft ping command to make Cricket ping the server again every so often and update the message (persistence?)
+- /discord emote to easily grab an emoji
 - More fun commands, of course!
