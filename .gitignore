@@ -52,3 +52,5 @@ $RECYCLE.BIN/
 /.env
 /cogs/__pycache__
 /users.json
+/image_gen.png
+/Minecraftia-Regular.ttf
