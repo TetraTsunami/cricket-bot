@@ -6,6 +6,8 @@ import re
 import time
 import random
 import json
+import sys
+from PIL import Image, ImageDraw, ImageFont
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -13,51 +15,95 @@ class Fun(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author == self.bot.user:
-            return
+        try:
+            if message.author == self.bot.user:
+                return
 
-        if re.search('(?i)^I\'m back*', message.content):
-            await message.channel.send('hi back')
+            if re.search('(?i)^I\'m.+back*', message.content):
+                await message.channel.send('hi back')
 
-        if re.search('(?i)^Hi back*', message.content):
-            await message.channel.send('i\'m the only one that gets to say that, clown')
+            if re.search('(?i)^Hi back*', message.content):
+                await message.channel.send('i\'m the only one that gets to say that, clown')
 
-        if re.search('(?i)^Hi the only one*', message.content):
-            await message.channel.send('...')
-            time.sleep(0.5)
-            await message.channel.send('stop it')
-
-        if re.search('(?i)^uwu', message.content):
-            if random.choice([0, 0, 0, 1]):
-                await message.channel.send('https://media.discordapp.net/attachments/716303341822672999/768908033609695234/dontdoituwu.png')
+            if re.search('(?i)^Hi the only one*', message.content):
+                await message.channel.send('...')
                 time.sleep(0.5)
-                await message.channel.send('yes, that\'s a threat')
+                await message.channel.send('stop it')
 
-        if re.search('(?i)(^d.?e.*d.?chat*|^chat d.?e.*d*|^d.e.a?.?d..?c.h.a.t*)', message.content):
-            if (message.guild):
-                await message.channel.send('https://cdn.discordapp.com/attachments/534782089846063124/879143198197448764/objection-716514-2.mp4')
-                time.sleep(0.5)
-                # print(message.author.roles)
-                # we want to respect pronouns, so if someone has a role implying otherwise, we'll try not to call them a man.
-                result = []
-                for role in message.author.roles:
-                    if re.search('(?i).*She.*|.*They.*', role.name):
-                        result.append(role.name)
-                if result:
-                    await message.channel.send('knock it off, clown')
+            if re.search('(?i)^uwu', message.content):
+                if random.choice([0, 0, 0, 1]):
+                    await message.channel.send('https://media.discordapp.net/attachments/716303341822672999/768908033609695234/dontdoituwu.png')
+                    time.sleep(0.5)
+                    await message.channel.send('yes, that\'s a threat')
+
+            if re.search('(?i)(^d.?e.*d.?chat*|^chat d.?e.*d*|^d.e.a?.?d..?c.h.a.t*)', message.content):
+                if (message.guild):
+                    await message.channel.send('https://cdn.discordapp.com/attachments/534782089846063124/879143198197448764/objection-716514-2.mp4')
+                    time.sleep(0.5)
+                    # print(message.author.roles)
+                    # we want to respect pronouns, so if someone has a role implying otherwise, we'll try not to call them a man.
+                    result = []
+                    for role in message.author.roles:
+                        if re.search('(?i).*She.*|.*They.*', role.name):
+                            result.append(role.name)
+                    if result:
+                        await message.channel.send('knock it off, clown')
+                    else:
+                        await message.channel.send('knock it off, funnyman')
+
+            if re.search('(?i).*cricket.*', message.content) and cooldown(message.author.id, 'cricket', 3600) == True:
+                await message.channel.send('i\'m literally right here wow')
+
+            if re.search('(?i)^wah.?', message.content) and not cooldown(message.author.id, 'wah', 15, write=False):
+                if not cooldown(message.author.id, 'spam', 600):
+                    if cooldown(message.guild.id, 'guild.wah', 60*60*24):
+                        try:
+                            text_on_img(text=f"{message.author.name} spammed and ruined it for everyone", size=32)
+                            transparency()
+                            file = discord.File(fp="transparent_image_gen.png", filename=f"{message.author.name}_ruined_it.png")
+                            await message.channel.send(file=file)
+                        except:
+                            await message.channel.send(f"{message.author.name} spammed and ruined it for everyone")
                 else:
-                    await message.channel.send('knock it off, funnyman')
+                    await message.channel.send("please stop spamming lol")
+                        
+            if re.search('(?i)^wah.?', message.content) and cooldown(message.author.id, 'wah', 15) and cooldown(message.guild.id, 'guild.wah', 60*60*24, write=False) == True:
+                Waluigi = ['https://cdn.discordapp.com/attachments/668622610543935498/870716564779958352/paeewgo7i9u312.jpg', 'https://cdn.discordapp.com/attachments/716303341822672999/880179579044647002/waah.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179566738542652/waahh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179530482987068/waaaaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179525512728626/waa.png',
+                        'https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png']
+                await message.channel.send(random.choice(Waluigi))
+            
+        except:
+            print(sys.exc_info())
+                
+def text_on_img(fp="image_gen.png", text="Hello", size=12, color=(255,255,0)):
+	"Draw a text on an Image, saves it, show it"
+	fnt = ImageFont.truetype('Minecraftia-Regular.ttf', size)
+	# create image
+	image = Image.new(mode = "RGB", size = (int(size/1.5)*len(text),size+50), color = "black")
+	draw = ImageDraw.Draw(image)
+	# draw text
+	draw.text((10,10), text, font=fnt, fill=color)
+    #  save it
+	image.save(fp)
+ 
+def transparency(fp="image_gen.png"):
+    img = Image.open(fp)
+    rgba = img.convert("RGBA")
+    data = rgba.getdata()
+  
+    newData = []
+    for item in data:
+        if item[0] == 0 and item[1] == 0 and item[2] == 0:  # finding black colour by its RGB value
+            # storing a transparent value when we find a black colour
+            newData.append((255, 255, 255, 0))
+        else:
+            newData.append(item)  # other colours remain unchanged
+    
+    rgba.putdata(newData)
+    rgba.save("transparent_image_gen.png", "PNG")
 
-        if re.search('(?i).*cricket.*', message.content) and cooldown(message.author.id, 'cricket', 3600) == True:
-            await message.channel.send('i\'m literally right here wow')
-
-        if re.search('(?i)^wah.?', message.content) and cooldown(message.author.id, 'wah', 10) == True:
-            wahcd = time.time() + 6*60*60
-            Waluigi = ['https://cdn.discordapp.com/attachments/668622610543935498/870716564779958352/paeewgo7i9u312.jpg', 'https://cdn.discordapp.com/attachments/716303341822672999/880179579044647002/waah.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179566738542652/waahh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179530482987068/waaaaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179525512728626/waa.png',
-                       'https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png']
-            await message.channel.send(random.choice(Waluigi))
-
-def cooldown(user_id, command, cooldown):
+def cooldown(user_id, command, cooldown = 5, write = True):
+    # write = false lets us check if a cooldown has elapsed without resetting it
     user_id = str(user_id)
     if os.path.isfile('users.json'):
         try:
@@ -66,9 +112,10 @@ def cooldown(user_id, command, cooldown):
             time_diff = time.time() - cooldowns[user_id][f'{command}.cooldown']
             # user is in database for this command
             if time_diff >= cooldown:
-                cooldowns[user_id][f'{command}.cooldown'] = time.time()
-                with open('users.json', 'w') as fp:
-                    json.dump(cooldowns, fp, sort_keys=False, indent=4)
+                if write:
+                    cooldowns[user_id][f'{command}.cooldown'] = time.time()
+                    with open('users.json', 'w') as fp:
+                        json.dump(cooldowns, fp, sort_keys=False, indent=4)
                 return True
             else:
                 return False
@@ -83,15 +130,17 @@ def cooldown(user_id, command, cooldown):
                 cooldowns[user_id] = {}
                 cooldowns[user_id][f'{command}.cooldown'] = time.time()
             finally:
-                with open('users.json', 'w') as fp:
-                    json.dump(cooldowns, fp, sort_keys=False, indent=4)
+                if write:
+                    with open('users.json', 'w') as fp:
+                        json.dump(cooldowns, fp, sort_keys=False, indent=4)
                 return True
     else:
         # initialize database
-        cooldowns = {user_id: {}}
-        cooldowns[user_id][f'{command}.cooldown'] = time.time()
-        with open('users.json', 'w') as fp:
-            json.dump(cooldowns, fp, sort_keys=False, indent=4)
+        if write:
+            cooldowns = {user_id: {}}
+            cooldowns[user_id][f'{command}.cooldown'] = time.time()
+            with open('users.json', 'w') as fp:
+                json.dump(cooldowns, fp, sort_keys=False, indent=4)
         return True
 
 def setup(bot):
