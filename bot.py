@@ -13,7 +13,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 DEBUG = os.getenv('DEBUG_GUILD')
 cogs_dir = "cogs"
-activity = discord.Activity(type=discord.ActivityType.listening, name="to crickets, chirp!")
+activity = discord.Activity(type=discord.ActivityType.listening, name="crickets, chirp!")
 
 bot = commands.Bot(command_prefix="c!", activity=activity)
 intents = discord.Intents(messages=True, guilds=True)
