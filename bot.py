@@ -13,8 +13,9 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 DEBUG = os.getenv('DEBUG_GUILD')
 cogs_dir = "cogs"
+activity = discord.Activity(type=discord.ActivityType.listening, name="to crickets, chirp!")
 
-bot = commands.Bot("c!")
+bot = commands.Bot(command_prefix="c!", activity=activity)
 intents = discord.Intents(messages=True, guilds=True)
 if DEBUG:
     slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True, debug_guild=DEBUG, override_type = True)
