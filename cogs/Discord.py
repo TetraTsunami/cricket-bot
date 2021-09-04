@@ -11,13 +11,13 @@ class Discord(commands.Cog):
         
     @cog_ext.cog_subcommand(base="discord",
             name="user",
-            description="Returns info about a user",
+            description="Returns info about a user (or yourself!)",
             options=[
                 create_option(
                     name="user",
                     description="Name/ID of the user",
                     option_type=3,
-                    required=True
+                    required=False
                 ),
                 create_option(
                     name="hidden",
@@ -26,7 +26,9 @@ class Discord(commands.Cog):
                     required=False
                 )
             ])
-    async def user_info(self, ctx: SlashContext, user, hidden=False):
+    async def user_info(self, ctx: SlashContext, user=0, hidden=False):
+        if user == 0:
+            user = ctx.author_id
         target = await self.bot.fetch_user(re.sub(r'^<@!|>$', '', user))
         embed = discord.Embed(title=f'{target.name}#{target.discriminator}', description=target.mention, color=0xc84268)
         embed.set_thumbnail(url=target. avatar_url)
