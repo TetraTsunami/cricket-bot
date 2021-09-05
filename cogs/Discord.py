@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import datetime
 import json
 import re
@@ -34,10 +35,10 @@ class Discord(commands.Cog):
                     required=False
                 )
             ])
-    async def user_info(self, ctx: SlashContext, user=0, hidden=False):
-        if user == 0:
-            user = ctx.author_id
-        target = await self.bot.fetch_user(re.sub(r'^<@!|>$', '', user))
+    async def user_info(self, ctx: SlashContext, user=NULL, hidden=False):
+        if user == NULL:
+            user = ctx.author.mention
+        target = await self.bot.fetch_user(re.sub(r'^<@|!|>$', '', user))
         embed = discord.Embed(title=f'{target.name}#{target.discriminator}', description=target.mention, color=0xc84268)
         embed.set_thumbnail(url=target. avatar_url)
         embed.add_field(name="ID", value=target.id, inline=False)
@@ -53,7 +54,7 @@ class Discord(commands.Cog):
     
     
     @cog_ext.cog_subcommand(base="discord",
-            name="activity",
+            name="play",
             description="Starts an activity in your current voice channel",
             options=[
                 create_option(
@@ -83,7 +84,7 @@ class Discord(commands.Cog):
                     required=False
                 )
             ])
-    async def user_info(self, ctx: SlashContext, activity="755600276941176913", hidden=False):
+    async def activity(self, ctx: SlashContext, activity="755600276941176913", hidden=False):
         try: ctx.author.voice.channel 
         except: return await ctx.send('get in a voice channel, then we can talk', hidden=True)
         try:
