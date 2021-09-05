@@ -63,12 +63,16 @@ class Discord(commands.Cog):
                     required=False,
                     choices=[
                         create_choice(
-                            name="YouTube",
-                            value="755600276941176913"
-                        ),
-                        create_choice(
                             name="Betrayal.io",
                             value="773336526917861400"
+                        ),
+                        create_choice(
+                            name="Chess In The Park",
+                            value="832012774040141894"
+                        ),
+                        create_choice(
+                            name="YouTube Together",
+                            value="755600276941176913"
                         )
                     ]
                 ),
