@@ -87,7 +87,7 @@ class Minecraft(commands.Cog):
             print(sys.exc_info())
         except:
             embed = discord.Embed(
-                title=server, description="halp am havin a stronk")
+                title=server, description="❌ Couldn't make funny Minecraft machine go brr, try again later")
             await ctx.send(embed=embed,hidden=hidden)
             print(sys.exc_info())
         
