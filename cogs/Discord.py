@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 import datetime
 import json
 import re
@@ -35,8 +34,8 @@ class Discord(commands.Cog):
                     required=False
                 )
             ])
-    async def user_info(self, ctx: SlashContext, user=NULL, hidden=False):
-        if user == NULL:
+    async def user_info(self, ctx: SlashContext, user=0, hidden=False):
+        if user == 0:
             user = ctx.author.mention
         target = await self.bot.fetch_user(re.sub(r'^<@|!|>$', '', user))
         embed = discord.Embed(title=f'{target.name}#{target.discriminator}', description=target.mention, color=0xc84268)
