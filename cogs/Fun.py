@@ -22,6 +22,7 @@ class Fun(commands.Cog):
             if re.search('(?i)<:deadchat:\d+>', message.content):
                 if message.channel.id == 541089040200368129:
                     await message.add_reaction("<:deadchat:540541091863330816>")
+                return
                 
             if re.search('(?i)^I\'m.+back*', message.content):
                 await message.channel.send('hi back')
