@@ -19,6 +19,9 @@ class Fun(commands.Cog):
             if message.author == self.bot.user:
                 return
 
+            if re.search('(?i)<:deadchat:\d+>', message.content):
+                await message.add_reaction("<:deadchat:540541091863330816>")
+                
             if re.search('(?i)^I\'m.+back*', message.content):
                 await message.channel.send('hi back')
 
@@ -38,6 +41,9 @@ class Fun(commands.Cog):
 
             if re.search('(?i)(^d.?e.*d.?chat*|^chat d.?e.*d*|^d.e.a?.?d..?c.h.a.t*)', message.content):
                 if (message.guild):
+                    if(message.channel.id) == 884242230909501460:
+                        # don't react to :deadchat: in #deadchat 
+                        return
                     await message.channel.send('https://cdn.discordapp.com/attachments/534782089846063124/879143198197448764/objection-716514-2.mp4')
                     time.sleep(0.5)
                     # print(message.author.roles)
