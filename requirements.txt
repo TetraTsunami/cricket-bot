@@ -3,4 +3,4 @@ python-dotenv
 discord-py-slash-command
 mcstatus
 Pillow
-Requests
+requests
