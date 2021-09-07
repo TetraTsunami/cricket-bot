@@ -57,6 +57,11 @@ if __name__ == "__main__":
 @slash.subcommand(base="bot", name="ping", description="Returns info about the bot's ping")
 async def bot_ping(ctx):
     await ctx.send(f"Pong! {round(bot.latency * 1000)} ms.")
+    
+@slash.subcommand(base="bot", name="invite", description="Invite me to your own server!")
+async def bot_invite(ctx):
+    embed=discord.Embed(title="Bot invite", description=f"(Invite me!)[{discord.utils.oauth_url(client_id=discord.AppInfo,permissions='265281',scopes=('bot','application.commands'))}]", color=0xc84268)
+    await ctx.send(embed=embed)
 
 # @slash.subcommand(base="bot", name="reload", description="Reloads a backend module", 
 #                   options=[
