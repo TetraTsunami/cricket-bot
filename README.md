@@ -7,7 +7,7 @@ Heya! This is a simple canned response bot for Discord written in Python. I'm st
 
 Bot
 - `/bot ping` Get the ping of the bot- useful for diagnosing issues.
-- TODO `/bot invite` Get an invite link for the bot.
+- `/bot invite` Get an invite link for the bot.
 
 Minecraft
 - `/minecraft ping` Get player count, icon, and motd (+online players/plugins!) of a Minecraft server using [mcstatus](https://github.com/Dinnerbone/mcstatus/)
