@@ -60,7 +60,7 @@ async def bot_ping(ctx):
     
 @slash.subcommand(base="bot", name="invite", description="Invite me to your own server!")
 async def bot_invite(ctx):
-    embed=discord.Embed(title="Bot invite", description=f"(Invite me!)[{discord.utils.oauth_url(client_id=discord.AppInfo,permissions='265281',scopes=('bot','application.commands'))}]", color=0xc84268)
+    embed=discord.Embed(title="Bot invite", description=f"[Invite me!]({discord.utils.oauth_url(client_id=879838096466796545,scopes=('bot','application.commands'))})", color=0xc84268)
     await ctx.send(embed=embed)
 
 # @slash.subcommand(base="bot", name="reload", description="Reloads a backend module", 
