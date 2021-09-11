@@ -1,13 +1,16 @@
+import json
+import os
+import random
+import re
+import sys
+import time
+
 import discord
 from discord.ext import commands
-
-import os
-import re
-import time
-import random
-import json
-import sys
+from discord_slash import SlashContext, cog_ext
+from discord_slash.utils.manage_commands import create_choice, create_option
 from PIL import Image, ImageDraw, ImageFont
+
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -81,6 +84,27 @@ class Fun(commands.Cog):
                         'https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png', 'https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg','https://cdn.discordapp.com/attachments/716303341822672999/886000782997086249/w_a_a.png','https://media.discordapp.net/attachments/716303341822672999/886002244439380039/wa.webp','https://media.discordapp.net/attachments/534781603860316160/886044958547644466/unknown.png','https://media.discordapp.net/attachments/716303341822672999/886052239163129916/e07.png','https://media.discordapp.net/attachments/716303341822672999/886052462023299112/fxx8gwhs.png','https://cdn.discordapp.com/attachments/716303341822672999/886052535025160242/67c.png','https://cdn.discordapp.com/attachments/716303341822672999/886052735668084826/c2fy9ie1.png']
                 await message.channel.send(random.choice(Waluigi))
             
+            @cog_ext.cog_subcommand(base="minecraft",
+            name="say",
+            description="Turns your text into Minecraft text",
+            options=[
+                create_option(
+                    name="text",
+                    description="What you'd like to say",
+                    option_type=3,
+                    required=True
+                )
+            ])
+            async def minecraft_say(self, ctx: SlashContext, text):
+                try:
+                    text_on_img(text=f"<{message.author.name}> {text}", size=32)
+                    transparency()
+                    file = discord.File(fp="transparent_image_gen.png", filename=f"{message.author.name}_ruined_it.png")
+                    await ctx.send(file=file)
+                except:
+                    embed = discord.Embed(title="Minecraft Say", description="❌ I think Steve must've died or something, sad", color=0xc84268)
+                    await ctx.send(embed=embed, hidden=True)
+                
         except:
             print(sys.exc_info())
                 
