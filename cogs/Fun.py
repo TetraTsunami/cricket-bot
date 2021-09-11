@@ -24,24 +24,24 @@ class Fun(commands.Cog):
                     await message.add_reaction("<:deadchat:540541091863330816>")
                 return
                 
-            if re.search('(?i)^I\'m.+back*', message.content):
+            if re.search('(?i)^I\'m.+back.*', message.content):
                 await message.channel.send('hi back')
 
-            if re.search('(?i)^Hi back*', message.content):
+            if re.search('(?i)^Hi back.*', message.content):
                 await message.channel.send('i\'m the only one that gets to say that, clown')
 
-            if re.search('(?i)^Hi the only one*', message.content):
+            if re.search('(?i)^Hi the only one.*', message.content):
                 await message.channel.send('...')
                 time.sleep(0.5)
                 await message.channel.send('stop it')
 
-            if re.search('(?i)^uwu', message.content):
+            if re.search('(?i)\suwu', message.content):
                 if random.choice([0, 0, 0, 1]):
                     await message.channel.send('https://media.discordapp.net/attachments/716303341822672999/768908033609695234/dontdoituwu.png')
                     time.sleep(0.5)
                     await message.channel.send('yes, that\'s a threat')
 
-            if re.search('(?i)(^d.?e.*d.?chat*|^chat d.?e.*d*|^d.e.a?.?d..?c.h.a.t*)', message.content):
+            if re.search('(?i)(^d.?e.*d.?chat.*|^chat d.?e.*d.*|^d.e.a?.?d..?c.h.a.t.*)', message.content):
                 if (message.guild):
                     if message.channel.id == 541089040200368129:
                         # don't react to :deadchat: in #deadchat 
@@ -63,7 +63,7 @@ class Fun(commands.Cog):
                 await message.channel.send('i\'m literally right here wow')
 
             if re.search('(?i)^wah.?', message.content) and not cooldown(message.author.id, 'wah', 15, write=False):
-                if not cooldown(message.guild.id, 'spam', 600):
+                if not cooldown(message.guild.id, 'spam', 120):
                     if cooldown(message.guild.id, 'guild.wah', 60*60*24):
                         try:
                             text_on_img(text=f"{message.author.name} spammed and ruined it for everyone", size=32)
@@ -73,7 +73,7 @@ class Fun(commands.Cog):
                         except:
                             await message.channel.send(f"{message.author.name} spammed and ruined it for everyone")
                 else:
-                    responses = ["https://media.discordapp.net/attachments/716303341822672999/886051336519549019/no.jpg", "please stop spamming lol","spamming is sus. you're spamming. <:stevesmug:727202674587467857>", "i'm beginning to think you may have a problem","no wah. instead here's a turtle with a hat <:turtleyeehaw:873380927735205958>", f"y'all treat me like a wah machine but *i'm so much more, {message.author.mention}*", "go ask someone else for waluigi pics", "no.", "wah?"]
+                    responses = ["https://media.discordapp.net/attachments/716303341822672999/886051336519549019/no.jpg", "please stop spamming lol","spamming is sus. you're spamming. <:stevesmug:727202674587467857>", "i'm beginning to think y'all may have a problem","no wah. instead here's a turtle with a hat <:turtleyeehaw:873380927735205958>", f"y'all treat me like a wah machine but *i'm so much more, {message.author.mention}*", "go ask someone else for waluigi pics", "no.", "wah?"]
                     await message.channel.send(random.choice(responses))
                         
             if re.search('(?i)^wah.?', message.content) and cooldown(message.author.id, 'wah', 15) and cooldown(message.guild.id, 'guild.wah', 60*60*24, write=False) == True:
