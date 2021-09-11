@@ -83,8 +83,10 @@ class Fun(commands.Cog):
                 Waluigi = ['https://cdn.discordapp.com/attachments/668622610543935498/870716564779958352/paeewgo7i9u312.jpg', 'https://cdn.discordapp.com/attachments/716303341822672999/880179579044647002/waah.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179566738542652/waahh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179530482987068/waaaaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179525512728626/waa.png',
                         'https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png', 'https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg','https://cdn.discordapp.com/attachments/716303341822672999/886000782997086249/w_a_a.png','https://media.discordapp.net/attachments/716303341822672999/886002244439380039/wa.webp','https://media.discordapp.net/attachments/534781603860316160/886044958547644466/unknown.png','https://media.discordapp.net/attachments/716303341822672999/886052239163129916/e07.png','https://media.discordapp.net/attachments/716303341822672999/886052462023299112/fxx8gwhs.png','https://cdn.discordapp.com/attachments/716303341822672999/886052535025160242/67c.png','https://cdn.discordapp.com/attachments/716303341822672999/886052735668084826/c2fy9ie1.png']
                 await message.channel.send(random.choice(Waluigi))
+        except:
+            print(sys.exc_info())
             
-            @cog_ext.cog_subcommand(base="minecraft",
+    @cog_ext.cog_subcommand(base="minecraft",
             name="say",
             description="Turns your text into Minecraft text",
             options=[
@@ -95,19 +97,20 @@ class Fun(commands.Cog):
                     required=True
                 )
             ])
-            async def minecraft_say(self, ctx: SlashContext, text):
-                try:
-                    text_on_img(text=f"<{message.author.name}> {text}", size=32)
-                    transparency()
-                    file = discord.File(fp="transparent_image_gen.png", filename=f"{message.author.name}_ruined_it.png")
-                    await ctx.send(file=file)
-                except:
-                    embed = discord.Embed(title="Minecraft Say", description="❌ I think Steve must've died or something, sad", color=0xc84268)
-                    await ctx.send(embed=embed, hidden=True)
-                
-        except:
-            print(sys.exc_info())
-                
+    async def minecraft_say(self, ctx: SlashContext, text):
+        if len(text) <= 100:
+            try:
+                text_on_img(text=f"<{ctx.author.name}> {text}", size=32, color=(255,255,255))
+                transparency()
+                file = discord.File(fp="transparent_image_gen.png", filename=f"{ctx.author.name}_say.png")
+                await ctx.send(file=file)
+            except:
+                embed = discord.Embed(title="Minecraft Say", description="❌ I think Steve must've died or something, sad", color=0xc84268)
+                await ctx.send(embed=embed, hidden=True)
+        else:
+            embed = discord.Embed(title="Minecraft Say", description="❌ Please do not paste the entire Bee Movie script", color=0xc84268)
+            await ctx.send(embed=embed, hidden=True)
+        
 def text_on_img(fp="image_gen.png", text="Hello", size=12, color=(255,255,0)):
 	"Draw a text on an Image, saves it, show it"
 	fnt = ImageFont.truetype('Minecraftia-Regular.ttf', size)
