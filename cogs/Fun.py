@@ -1,4 +1,5 @@
 import json
+from operator import truediv
 import os
 import random
 import re
@@ -8,7 +9,8 @@ import time
 import discord
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
-from discord_slash.utils.manage_commands import create_choice, create_option
+from discord_slash.utils.manage_commands import create_choice, create_option, create_permission
+from discord_slash.model import SlashCommandPermissionType
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -110,6 +112,25 @@ class Fun(commands.Cog):
         else:
             embed = discord.Embed(title="Minecraft Say", description="❌ Please do not paste the entire Bee Movie script", color=0xc84268)
             await ctx.send(embed=embed, hidden=True)
+            
+    
+    @cog_ext.cog_subcommand(base="bot", name="say",
+                description="Make me say something like the grim puppetmaster you wish you could be.", options=[
+                create_option(
+                    name="text",
+                    description="What you'd like to say",
+                    option_type=3,
+                    required=True
+                )
+            ])
+    @cog_ext.permission(guild_id=534780027502460950,
+                permissions=[
+                    create_permission(541084193296482314, SlashCommandPermissionType.ROLE, True)
+                ]
+            )
+    async def bot_say(self, ctx: SlashContext, text):
+        await ctx.channel.send(content=text)
+        await ctx.send("<:Yeah:870075068644999248>",hidden=True)
         
 def text_on_img(fp="image_gen.png", text="Hello", size=12, color=(255,255,0)):
 	"Draw a text on an Image, saves it, show it"
