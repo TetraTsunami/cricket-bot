@@ -125,6 +125,7 @@ class Fun(commands.Cog):
             ])
     @cog_ext.permission(guild_id=534780027502460950,
                 permissions=[
+                    create_permission(534780027502460950, SlashCommandPermissionType.ROLE, False),
                     create_permission(541084193296482314, SlashCommandPermissionType.ROLE, True)
                 ]
             )
