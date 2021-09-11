@@ -102,47 +102,49 @@ class Discord(commands.Cog):
                 return await ctx.send(embed=embed,hidden=True)
             if activity == "755600276941176913": embed = discord.Embed(title="<:youtubeicon:884155771556859984> YouTube Activity", description=f"[Start a YouTube session in {ctx.author.voice.channel}](https://discord.gg/{r.json()['code']})",color=0xc84268)
             else:
-                embed = discord.Embed(title="Discord Activity", description=f"[Start an Activity session in {ctx.author.voice.channel}](https://discord.gg/{r.json()['code']})", color=0xc84268)
+                embed = discord.Embed(title="<:discordicon:884288572646129694> Discord Activity", description=f"[Start an Activity session in {ctx.author.voice.channel}](https://discord.gg/{r.json()['code']})", color=0xc84268)
             await ctx.send(embed=embed,hidden=hidden)
         except:
             if activity == "755600276941176913": embed = discord.Embed(title="<:youtubeicon:884155771556859984> YouTube Activity", description="❌ Couldn't make funny activity machine go brr, try again later",color=0xc84268)
             else:
                 embed = discord.Embed(title="Discord Activity", description="❌ Couldn't make funny activity machine go brr, try again later", color=0xc84268)
             await ctx.send(embed=embed,hidden=True)
-    # if (cmd === "yttogether") {
-    #     const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]);
-    #     if (!channel || channel.type !== "voice") return message.channel.send("❌ | Invalid channel specified!");
-    #     if (!channel.permissionsFor(message.guild.me).has("CREATE_INSTANT_INVITE")) return message.channel.send("❌ | I need `CREATE_INSTANT_INVITE` permission");
-
-    #     fetch(`https://discord.com/api/v8/channels/${channel.id}/invites`, {
-    #         method: "POST",
-    #         body: JSON.stringify({
-    #             max_age: 86400,
-    #             max_uses: 0,
-    #             target_application_id: "755600276941176913", // youtube together
-    #             target_type: 2,
-    #             temporary: false,
-    #             validate: null
-    #         }),
-    #         headers: {
-    #             "Authorization": `Bot ${client.token}`,
-    #             "Content-Type": "application/json"
-    #         }
-    #     })
-    #         .then(res => res.json())
-    #         .then(invite => {
-    #             if (invite.error || !invite.code) return message.channel.send("❌ | Could not start **YouTube Together**!");
-    #             message.channel.send(`✅ | Click here to start **YouTube Together** in ${channel.name}: <https://discord.gg/${invite.code}>`);
-    #         })
-    #         .catch(e => {
-    #             message.channel.send("❌ | Could not start **YouTube Together**!");
-    #         })
-    # }
+    
+    @cog_ext.cog_subcommand(base="discord",
+            name="emote",
+            description="Returns info about a custom emoji",
+            options=[
+                create_option(
+                    name="emoji",
+                    description="The emoji you'd like to download",
+                    option_type=3,
+                    required=True
+                )
+            ])
+    async def discord_emoji(self, ctx: SlashContext, emoji: discord.Emoji):
+        id = re.sub(r'^<.?:.*:|>$', '', emoji)
+        name = re.sub(r'^<.?:|:.*>$', '', emoji)
+        if re.search(r'^<a:', emoji):
+            animated = True
+        else:
+            animated = False
+        embed = discord.Embed(title="Emoji", color=0xc84268)
+        embed.set_image(url=url(id, animated=animated))
+        embed.add_field(name="Name", value=f"`{name}`")
+        embed.add_field(name="Animated", value=animated)
+        embed.add_field(name="ID", value=f"`{id}`")
+        embed.add_field(name="URL", value=url(id, animated=animated), inline=False)
+        await ctx.send(embed=embed)
             
 def formatdate(target: datetime.datetime):
     target = target.replace(tzinfo=datetime.timezone.utc)
     target_cst = target.astimezone(datetime.timezone(datetime.timedelta(hours=-6)))
     return target_cst.strftime("%A, %B %d, %Y %I:%M %p CST")
+
+def url(id, *, animated: bool = False):
+	# Convert an emote ID to the image URL for that emote.
+	extension = 'gif' if animated else 'png'
+	return f'https://cdn.discordapp.com/emojis/{id}.{extension}'
 
 def setup(bot):
     bot.add_cog(Discord(bot))
