@@ -114,7 +114,7 @@ class Fun(commands.Cog):
             await ctx.send(embed=embed, hidden=True)
             
     
-    @cog_ext.cog_subcommand(base="bot", name="say",
+    @cog_ext.cog_command(name="say",
                 description="Make me say something like the grim puppetmaster you wish you could be.", options=[
                 create_option(
                     name="text",
