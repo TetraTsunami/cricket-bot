@@ -1,5 +1,4 @@
 import json
-from operator import truediv
 import os
 import random
 import re
