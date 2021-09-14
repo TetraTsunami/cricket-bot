@@ -4,7 +4,7 @@ from discord_slash.utils.manage_commands import create_choice, create_option, cr
 from discord_slash.model import SlashCommandPermissionType
 
 
-class Bot(commands.Cog):
+class Utilities(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
@@ -29,4 +29,4 @@ class Bot(commands.Cog):
         
 
 def setup(bot):
-    bot.add_cog(Bot(bot))
+    bot.add_cog(Utilities(bot))
