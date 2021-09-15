@@ -87,25 +87,25 @@ class Fun(commands.Cog):
         except:
             print(sys.exc_info())
        
-    @commands.Cog.listener()   
-    async def on_raw_reaction_add(self, payload):
-        guild = self.bot.get_guild(payload.guild_id)
-        channel = self.bot.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
-        # If reaction is :cramorantbruh: and message is in #dankmemes or my test channel
-        if payload.channel_id == 881244618019205150 and payload.emoji.name == 'cramorantbruh' or payload.channel_id == 541085407039717386:
-            reaction = discord.utils.find(lambda r: r.emoji.name == 'cramorantbruh', message.reactions)
-            if reaction.count >= 8:
-                if cooldown(guild.id, message.id, 604800*8, write=False):
-                    await message.reply('Hello! For crimes against humanity, the court has found you https://c.tenor.com/x8Ao32hEVp8AAAAd/phoenix-wright-judge.gif')
-                    try:
-                        role = discord.utils.find(lambda r: r.id == 721839159299407924, guild.roles)
-                        member = await guild.fetch_member(payload.user_id)
-                        await member.add_roles(role)
-                        await message.channel.send(f'You have been barred from {channel.mention}. Get out of my sight.')
-                    except:
-                        await message.channel.send("There's no punishment, but it's the thought that counts.")
-                    cooldown(guild.id, message.id)
+    # @commands.Cog.listener()   
+    # async def on_raw_reaction_add(self, payload):
+    #     guild = self.bot.get_guild(payload.guild_id)
+    #     channel = self.bot.get_channel(payload.channel_id)
+    #     message = await channel.fetch_message(payload.message_id)
+    #     # If reaction is :cramorantbruh: and message is in #dankmemes or my test channel
+    #     if payload.channel_id == 881244618019205150 and payload.emoji.name == 'cramorantbruh' or payload.channel_id == 541085407039717386:
+    #         reaction = discord.utils.find(lambda r: r.emoji.name == 'cramorantbruh', message.reactions)
+    #         if reaction.count >= 8:
+    #             if cooldown(guild.id, message.id, 604800*8, write=False):
+    #                 await message.reply('Hello! For crimes against humanity, the court has found you https://c.tenor.com/x8Ao32hEVp8AAAAd/phoenix-wright-judge.gif')
+    #                 try:
+    #                     role = discord.utils.find(lambda r: r.id == 721839159299407924, guild.roles)
+    #                     member = await guild.fetch_member(payload.user_id)
+    #                     await member.add_roles(role)
+    #                     await message.channel.send(f'You have been barred from {channel.mention}. Get out of my sight.')
+    #                 except:
+    #                     await message.channel.send("There's no punishment, but it's the thought that counts.")
+    #                 cooldown(guild.id, message.id)
                 
             
     @cog_ext.cog_subcommand(base="minecraft",
