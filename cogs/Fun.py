@@ -66,7 +66,7 @@ class Fun(commands.Cog):
             if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'cricket', 60*60*24) == True:
                 await message.channel.send('i\'m literally right here wow')
 
-            if re.search('(?i)^wah.', message.content) and not cooldown(message.author.id, 'wah', 15, write=False):
+            if re.search('(?i)^wah.?$', message.content) and not cooldown(message.author.id, 'wah', 10, write=False):
                 if not cooldown(message.guild.id, 'spam', 120):
                     if cooldown(message.guild.id, 'guild.wah', 60*60*24):
                         try:
@@ -80,7 +80,7 @@ class Fun(commands.Cog):
                     responses = ["https://media.discordapp.net/attachments/716303341822672999/886051336519549019/no.jpg", "please stop spamming lol","spamming is sus. you're spamming. <:stevesmug:727202674587467857>", "i'm beginning to think y'all may have a problem","no wah. instead here's a turtle with a hat <:turtleyeehaw:873380927735205958>", f"y'all treat me like a wah machine but *i'm so much more, {message.author.mention}*", "go ask someone else for waluigi pics", "no.", "wah?"]
                     await message.channel.send(random.choice(responses))
                         
-            if re.search('(?i)^wah.', message.content) and cooldown(message.author.id, 'wah', 15) and cooldown(message.guild.id, 'guild.wah', 60*60*24, write=False) == True:
+            if re.search('(?i)^wah.?$', message.content) and cooldown(message.author.id, 'wah', 10) and cooldown(message.guild.id, 'guild.wah', 60*60*24, write=False) == True:
                 Waluigi = ['https://cdn.discordapp.com/attachments/668622610543935498/870716564779958352/paeewgo7i9u312.jpg', 'https://cdn.discordapp.com/attachments/716303341822672999/880179579044647002/waah.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179566738542652/waahh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179530482987068/waaaaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179525512728626/waa.png',
                         'https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png', 'https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg','https://cdn.discordapp.com/attachments/716303341822672999/886000782997086249/w_a_a.png','https://media.discordapp.net/attachments/716303341822672999/886002244439380039/wa.webp','https://media.discordapp.net/attachments/534781603860316160/886044958547644466/unknown.png','https://media.discordapp.net/attachments/716303341822672999/886052239163129916/e07.png','https://media.discordapp.net/attachments/716303341822672999/886052462023299112/fxx8gwhs.png','https://cdn.discordapp.com/attachments/716303341822672999/886052535025160242/67c.png','https://cdn.discordapp.com/attachments/716303341822672999/886052735668084826/c2fy9ie1.png']
                 await message.channel.send(random.choice(Waluigi))
