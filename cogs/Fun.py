@@ -12,6 +12,7 @@ from discord_slash import SlashContext, cog_ext
 from discord_slash.utils.manage_commands import create_choice, create_option, create_permission
 from discord_slash.model import SlashCommandPermissionType
 from PIL import Image, ImageDraw, ImageFont
+from io import BytesIO
 
 
 class Fun(commands.Cog):
@@ -69,7 +70,7 @@ class Fun(commands.Cog):
 
             if (re.search('(?i)^wah.?$', message.content) and message.author.id == "361660269694287883") or re.search('(?i)^wah\!\?$', message.content):
                 wah = requests.get("https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg")
-                image = Image.open(wah)
+                image = Image.open(BytesIO(wah.content))
                 angle=random.randrange(0,360,1)
                 transparency(fp=image.rotate(angle,expand=True,fillcolor=None))
                 file = discord.File(fp="transparent_image_gen.png", filename=f"wah_{angle}.png") 
