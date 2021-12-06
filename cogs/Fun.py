@@ -67,7 +67,7 @@ class Fun(commands.Cog):
             if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'cricket', 60*60*24) == True:
                 await message.channel.send('i\'m literally right here wow')
 
-            if re.search('(?i)^wah.?$', message.content) and message.author.id == "361660269694287883":
+            if (re.search('(?i)^wah.?$', message.content) and message.author.id == "361660269694287883") or re.search('(?i)^wah!?$', message.content):
                 wah = requests.get("https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg")
                 image = Image.open(wah)
                 angle=random.randrange(0,360,1)
