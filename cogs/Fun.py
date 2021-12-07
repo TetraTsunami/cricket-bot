@@ -68,7 +68,7 @@ class Fun(commands.Cog):
             if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'cricket', 60*60*24) == True:
                 await message.channel.send('i\'m literally right here wow')
 
-            if (re.search('(?i)^wah.?$', message.content) and message.author.id == "361660269694287883") or re.search('(?i)^wah\!\?$', message.content):
+            if (re.search('(?i)^wah.?$', message.content) and (message.author.id == 361660269694287883 or message.author.id == 214167454291722241)) or re.search('(?i)^wah\!\?$', message.content):
                 async with message.channel.typing():
                     image = Image.open("wah.png")
                     angle=random.randrange(0,360,1)
