@@ -69,12 +69,13 @@ class Fun(commands.Cog):
                 await message.channel.send('i\'m literally right here wow')
 
             if (re.search('(?i)^wah.?$', message.content) and message.author.id == "361660269694287883") or re.search('(?i)^wah\!\?$', message.content):
-                wah = requests.get("https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg")
-                image = Image.open(BytesIO(wah.content))
-                angle=random.randrange(0,360,1)
-                transparency(fp=image.rotate(angle,expand=True,fillcolor=None))
-                file = discord.File(fp="transparent_image_gen.png", filename=f"wah_{angle}.png") 
-                await message.channel.send(file=file)
+                async with message.channel.typing():
+                    image = Image.open("wah.png")
+                    angle=random.randrange(0,360,1)
+                    image.rotate(angle,expand=True,fillcolor=None).save("image_gen.png", "PNG")
+                    transparency()
+                    file = discord.File(fp="transparent_image_gen.png", filename=f"wah_{angle}.png") 
+                    await message.channel.send(file=file)
                 return
                 
             if re.search('(?i)^wah.?$', message.content) and not cooldown(message.author.id, 'wah', 10, write=False):
