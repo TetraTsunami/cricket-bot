@@ -68,6 +68,19 @@ class Fun(commands.Cog):
             if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'cricket', 60*60*24) == True:
                 await message.channel.send('i\'m literally right here wow')
 
+            if re.search('(?i)^wah\?$', message.content):
+                async with message.channel.typing():
+                    await message.author.avatar_url.save("avatar.png")
+                    im1 = Image.open('avatar.png').resize((115,115))
+                    im2 = Image.open('wah_outfit.png')
+                    image = Image.new("RGBA", (280,367), (255, 255, 255, 0))
+                    image.paste(im1,(82,53))
+                    image.alpha_composite(im2)
+                    image.save('transparent_image_gen.png')
+                    file = discord.File(fp="transparent_image_gen.png", filename=f"wah_{message.author.id}.png") 
+                    await message.channel.send(file=file)
+                return
+            
             if (re.search('(?i)^wah.?$', message.content) and (message.author.id == 361660269694287883 or message.author.id == 214167454291722241)) or re.search('(?i)^wah\!\?$', message.content):
                 async with message.channel.typing():
                     image = Image.open("wah.png")
@@ -93,8 +106,7 @@ class Fun(commands.Cog):
                     await message.channel.send(random.choice(responses))
                         
             if re.search('(?i)^wah.?$', message.content) and cooldown(message.author.id, 'wah', 10) and cooldown(message.guild.id, 'guild.wah', 60*60*24, write=False) == True:
-                Waluigi = ['https://cdn.discordapp.com/attachments/668622610543935498/870716564779958352/paeewgo7i9u312.jpg', 'https://cdn.discordapp.com/attachments/716303341822672999/880179579044647002/waah.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179566738542652/waahh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179530482987068/waaaaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179525512728626/waa.png',
-                        'https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png', 'https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg','https://cdn.discordapp.com/attachments/716303341822672999/886000782997086249/w_a_a.png','https://media.discordapp.net/attachments/716303341822672999/886002244439380039/wa.webp','https://media.discordapp.net/attachments/534781603860316160/886044958547644466/unknown.png','https://media.discordapp.net/attachments/716303341822672999/886052239163129916/e07.png','https://media.discordapp.net/attachments/716303341822672999/886052462023299112/fxx8gwhs.png','https://cdn.discordapp.com/attachments/716303341822672999/886052535025160242/67c.png','https://cdn.discordapp.com/attachments/716303341822672999/886052735668084826/c2fy9ie1.png']
+                Waluigi = ['https://cdn.discordapp.com/attachments/668622610543935498/870716564779958352/paeewgo7i9u312.jpg', 'https://cdn.discordapp.com/attachments/716303341822672999/880179579044647002/waah.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179566738542652/waahh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179530482987068/waaaaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179525512728626/waa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png', 'https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png', 'https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg','https://cdn.discordapp.com/attachments/716303341822672999/886000782997086249/w_a_a.png','https://media.discordapp.net/attachments/716303341822672999/886002244439380039/wa.webp','https://media.discordapp.net/attachments/534781603860316160/886044958547644466/unknown.png','https://media.discordapp.net/attachments/716303341822672999/886052239163129916/e07.png','https://media.discordapp.net/attachments/716303341822672999/886052462023299112/fxx8gwhs.png','https://cdn.discordapp.com/attachments/716303341822672999/886052535025160242/67c.png','https://cdn.discordapp.com/attachments/716303341822672999/886052735668084826/c2fy9ie1.png', 'https://cdn.discordapp.com/attachments/883874626848063531/923019291119464448/yah.jpg', 'https://cdn.discordapp.com/attachments/883874626848063531/923019291446640750/wahhhhhh.jpg', 'https://cdn.discordapp.com/attachments/883874626848063531/923019291891232768/wahoo.jpg', 'https://cdn.discordapp.com/attachments/883874626848063531/923019292096749568/waht.jpg', 'https://cdn.discordapp.com/attachments/883874626848063531/923019292293865482/wahwah.jpg']
                 await message.channel.send(random.choice(Waluigi))
         except:
             print(sys.exc_info())

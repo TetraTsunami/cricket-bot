@@ -39,7 +39,7 @@ class Discord(commands.Cog):
             user = ctx.author.mention
         target = await self.bot.fetch_user(re.sub(r'^<@|!|>$', '', user))
         embed = discord.Embed(title=f'{target.name}#{target.discriminator}', description=target.mention, color=0xc84268)
-        embed.set_thumbnail(url=target. avatar_url)
+        embed.set_thumbnail(url=target.avatar_url)
         embed.add_field(name="ID", value=target.id, inline=False)
         embed.add_field(name="Created", value=formatdate(target.created_at))
         try:
