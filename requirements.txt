@@ -1,6 +1,5 @@
-discord.py
+git+https://github.com/Pycord-Development/pycord
 python-dotenv
-discord-py-slash-command
 mcstatus
 Pillow
 requests

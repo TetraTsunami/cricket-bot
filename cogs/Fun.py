@@ -81,7 +81,7 @@ class Fun(commands.Cog):
                     await message.channel.send(file=file)
                 return
             
-            if (re.search('(?i)^wah.?$', message.content) and (message.author.id == 361660269694287883 or message.author.id == 214167454291722241)) or re.search('(?i)^wah\!\?$', message.content):
+            if (re.search('(?i)^wah.?$', message.content) and message.author.id == 361660269694287883):
                 async with message.channel.typing():
                     image = Image.open("wah.png")
                     angle=random.randrange(0,360,1)
