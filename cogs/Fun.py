@@ -70,14 +70,14 @@ class Fun(commands.Cog):
 
             if re.search('(?i)^wah\?$', message.content):
                 async with message.channel.typing():
-                    await message.author.avatar_url.save("avatar.png")
-                    im1 = Image.open('avatar.png').resize((115,115))
+                    await message.author.avatar_url.save("avatar_image_gen.png")
+                    im1 = Image.open('avatar_image_gen.png').resize((115,115))
                     im2 = Image.open('wah_outfit.png')
                     image = Image.new("RGBA", (280,367), (255, 255, 255, 0))
                     image.paste(im1,(82,53))
                     image.alpha_composite(im2)
-                    image.save('transparent_image_gen.png')
-                    file = discord.File(fp="transparent_image_gen.png", filename=f"wah_{message.author.id}.png") 
+                    image.save('./image_gen/transparent_image_gen.png')
+                    file = discord.File(fp="./image_gen/transparent_image_gen.png", filename=f"wah_{message.author.id}.png") 
                     await message.channel.send(file=file)
                 return
             
@@ -85,9 +85,9 @@ class Fun(commands.Cog):
                 async with message.channel.typing():
                     image = Image.open("wah.png")
                     angle=random.randrange(0,360,1)
-                    image.rotate(angle,expand=True,fillcolor=None).save("image_gen.png", "PNG")
+                    image.rotate(angle,expand=True,fillcolor=None).save("./image_gen/image_gen.png", "PNG")
                     transparency()
-                    file = discord.File(fp="transparent_image_gen.png", filename=f"wah_{angle}.png") 
+                    file = discord.File(fp="./image_gen/transparent_image_gen.png", filename=f"wah_{angle}.png") 
                     await message.channel.send(file=file)
                 return
                 
@@ -97,7 +97,7 @@ class Fun(commands.Cog):
                         try:
                             text_on_img(text=f"{message.author.name} spammed and ruined it for everyone", size=32)
                             transparency()
-                            file = discord.File(fp="transparent_image_gen.png", filename=f"{message.author.name}_ruined_it.png")
+                            file = discord.File(fp="./image_gen/transparent_image_gen.png", filename=f"{message.author.name}_ruined_it.png")
                             await message.channel.send(file=file)
                         except:
                             await message.channel.send(f"{message.author.name} spammed and ruined it for everyone")
@@ -148,7 +148,7 @@ class Fun(commands.Cog):
             try:
                 text_on_img(text=f"<{ctx.author.name}> {text}", size=32, color=(255,255,255))
                 transparency()
-                file = discord.File(fp="transparent_image_gen.png", filename=f"{ctx.author.name}_say.png")
+                file = discord.File(fp="./image_gen/transparent_image_gen.png", filename=f"{ctx.author.name}_say.png")
                 await ctx.send(file=file)
             except:
                 embed = discord.Embed(title="Minecraft Say", description="❌ I think Steve must've died or something, sad", color=0xc84268)
@@ -157,9 +157,9 @@ class Fun(commands.Cog):
             embed = discord.Embed(title="Minecraft Say", description="❌ Please do not paste the entire Bee Movie script", color=0xc84268)
             await ctx.send(embed=embed, hidden=True)
         
-def text_on_img(fp="image_gen.png", text="Hello", size=12, color=(255,255,0)):
+def text_on_img(fp="./image_gen/image_gen.png", text="Hello", size=12, color=(255,255,0), font='Minecraftia-Regular.ttf'):
 	"Draw a text on an Image, saves it, show it"
-	fnt = ImageFont.truetype('Minecraftia-Regular.ttf', size)
+	fnt = ImageFont.truetype(font, size)
 	# create image
 	image = Image.new(mode = "RGB", size = (int(size/1.4)*len(text),size+30), color = "black")
 	draw = ImageDraw.Draw(image)
@@ -168,7 +168,7 @@ def text_on_img(fp="image_gen.png", text="Hello", size=12, color=(255,255,0)):
     #  save it
 	image.save(fp)
  
-def transparency(fp="image_gen.png"):
+def transparency(fp="./image_gen/image_gen.png"):
     img = Image.open(fp)
     rgba = img.convert("RGBA")
     data = rgba.getdata()
@@ -182,7 +182,7 @@ def transparency(fp="image_gen.png"):
             newData.append(item)  # other colours remain unchanged
     
     rgba.putdata(newData)
-    rgba.save("transparent_image_gen.png", "PNG")
+    rgba.save("./image_gen/transparent_image_gen.png", "PNG")
 
 def cooldown(user_id, command, cooldown = 5, write = True):
     # write = false lets us check if a cooldown has elapsed without resetting it
