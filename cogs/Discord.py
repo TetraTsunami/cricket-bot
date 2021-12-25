@@ -1,14 +1,13 @@
-import datetime
-import json
-import re
 import os
+import re
 
 import discord
-from discord.commands import SlashCommandGroup, Option
-from .utils.embed import simple_embed
 import requests
+from discord.commands import Option, SlashCommandGroup
 from discord.ext import commands
 from dotenv import load_dotenv
+
+from .utils.embed import simple_embed
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -17,7 +16,7 @@ class Discord(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    discord_utils = SlashCommandGroup("discord", "Commands related to discord.")  
+    discord_utils = SlashCommandGroup("discord", "Commands related to discord.")
     
     @discord_utils.command(description="Returns info about a user (or yourself!)")
     async def user(
