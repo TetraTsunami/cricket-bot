@@ -1,31 +1,24 @@
 from discord.ext import commands
-from discord_slash import SlashContext, cog_ext
-from discord_slash.utils.manage_commands import create_choice, create_option, create_permission
-from discord_slash.model import SlashCommandPermissionType
+from discord.commands import slash_command, permissions, Option
 
 
 class Utilities(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
-    @cog_ext.cog_slash(name="say",
-                description="Make me say something like the grim puppetmaster you wish you could be.", options=[
-                create_option(
-                    name="text",
-                    description="What you'd like to say",
-                    option_type=3,
-                    required=True
-                )
-            ])
-    @cog_ext.permission(guild_id=534780027502460950,
-                permissions=[
-                    create_permission(534780027502460950, SlashCommandPermissionType.ROLE, False),
-                    create_permission(541084193296482314, SlashCommandPermissionType.ROLE, True)
-                ]
-            )
-    async def bot_say(self, ctx: SlashContext, text):
+    
+    @slash_command(description="Make me say something like the grim puppetmaster you wish you could be.", guild_ids=[534780027502460950], default_permission=False) 
+    # options=[
+    #             create_option(
+    #                 name="text",
+    #                 description="What you'd like to say",
+    #                 option_type=3,
+    #                 required=True
+    #             )
+    #         ])
+    @permissions.has_role("Mod Squad")
+    async def say(self, ctx, text: Option(str, 'What you\'d like to say')):
         await ctx.channel.send(content=text)
-        await ctx.send("<:photothumbsup:886416067021381663><:Yeah:870075068644999248>",hidden=True)
+        await ctx.respond("<:photothumbsup:886416067021381663><:Yeah:870075068644999248>",ephemeral=True)
         
 
 def setup(bot):
