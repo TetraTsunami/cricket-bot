@@ -16,7 +16,7 @@ class Discord(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    discord_utils = SlashCommandGroup("discord", "Commands related to discord.")
+    discord_utils = SlashCommandGroup("discord", "Commands related to Discord.")
     
     @discord_utils.command(description="Returns info about a user (or yourself!)")
     async def user(
