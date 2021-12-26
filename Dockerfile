@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Grab Python, make a directory to store everything
-FROM python:3.8-slim-buster
+FROM python:3.8
 WORKDIR /app
 
 # Grab requirements
