@@ -6,7 +6,7 @@ class Utilities(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @slash_command(description="Make me say something like the grim puppetmaster you wish you could be.", guild_ids=[534780027502460950], default_permission=False) 
+    @slash_command(description="Make me say something like the grim puppetmaster you wish you could be.", default_permission=False) 
     # options=[
     #             create_option(
     #                 name="text",
