@@ -11,8 +11,8 @@ import json
 print("~~~~ Cricket! ~~~~")
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+SUPPORT_GUILD = int(os.getenv('SUPPORT_GUILD'))
 if os.getenv('DEBUG_GUILD'): DEBUG = int(os.getenv('DEBUG_GUILD'))
-if os.getenv('SUPPORT_GUILD'): SUPPORT_GUILD = int(os.getenv('SUPPORT_GUILD'))
 
 cogs_dir = "cogs"
 activity = discord.Activity(type=discord.ActivityType.listening, name="crickets, chirp!")
@@ -67,10 +67,6 @@ async def load(ctx, module: Option(str, "Name of the cog to load", autocomplete=
         await ctx.respond(embed=simple_embed("Load",'Failure',f'{e.__class__.__name__}: {e}'), ephemeral = True)
         print(f"✗ {module} failed to load as requested by {ctx.author}")
         print(f"→ {e.__class__.__name__}: {e}")
-    except discord.HTTPException as e:
-        await ctx.respond(embed=simple_embed("Reload",'Warning',f'{e.__class__.__name__}: {e}'), ephemeral = True)
-        print(f"? {module} maybe loaded as requested by {ctx.author}?")
-        print(f"→ {e.__class__.__name__}: {e}")
     else:
         await ctx.respond(embed=simple_embed("Load",'Success',f"{module} loaded"), ephemeral = True)
         print(f"✓ {module} loaded by {ctx.author}")
@@ -90,15 +86,12 @@ async def unload(ctx, module: Option(str, "Name of the cog to unload", autocompl
 @module.command(description="Reload a backend module", guild_ids=[SUPPORT_GUILD])
 async def reload(ctx, module: Option(str, "Name of the cog to reload", autocomplete=discord.utils.basic_autocomplete(list_cogs()))):
     try:
-        bot.reload_extension(cogs_dir + "." + module)
+        bot.reload_extension(cogs_dir + "." + module) 
+        # slash cog reloading is, apparently, unsupported?
         await bot.register_commands()
     except discord.ExtensionError as e:
         await ctx.respond(embed=simple_embed("Reload",'Failure',f'{e.__class__.__name__}: {e}'), ephemeral = True)
         print(f"✗ {module} failed to reload as requested by {ctx.author}")
-        print(f"→ {e.__class__.__name__}: {e}")
-    except discord.HTTPException as e:
-        await ctx.respond(embed=simple_embed("Reload",'Warning',f'{e.__class__.__name__}: {e}'), ephemeral = True)
-        print(f"? {module} maybe reloaded as requested by {ctx.author}?")
         print(f"→ {e.__class__.__name__}: {e}")
     else:
         await ctx.respond(embed=simple_embed("Reload",'Success',f"{module} reloaded"), ephemeral = True)
