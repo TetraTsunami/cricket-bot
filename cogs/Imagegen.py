@@ -66,7 +66,10 @@ class Image_gen(commands.Cog):
         box_list = [i for i in box_list if i]
         
         image = api.caption_image(meme=name_to_id(meme),boxes=box_list)
-        await ctx.respond(image['url'])
+        meme_url = image['url']
+        embed=discord.Embed(color=0xc84268)
+        embed.set_image(url=meme_url)
+        await ctx.respond(embed=embed)
         
 def name_to_boxes(name: str):
     for meme in MEME_LIST:
