@@ -117,8 +117,8 @@ class Imgflip(object):
         for i , item in enumerate(boxes):
             payload[f"boxes[{i}][text]"] = item
 
-        test_r = requests.post("http://httpbin.org/post", data=payload)
-        print(test_r.text)
+        # test_r = requests.post("http://httpbin.org/post", data=payload)
+        # print(test_r.text)
         r = requests.post(url, data=payload)
         r.raise_for_status()
         response = r.json()

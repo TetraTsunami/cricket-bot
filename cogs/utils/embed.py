@@ -1,6 +1,6 @@
 import discord
 
-def simple_embed(title,icon='None',status='None'):
+def simple_embed(title='None',icon='None',status='None'):
     EMOJI_KEY = {
         'None':'',
         'Success':'✅',
