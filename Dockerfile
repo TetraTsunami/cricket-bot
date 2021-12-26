@@ -13,4 +13,4 @@ COPY . .
 
 # Get inside
 ENTRYPOINT ["python3"]
-CMD ["-m", "bot"]
+CMD ["-u", "bot.py"]

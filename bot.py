@@ -25,7 +25,7 @@ intents = discord.Intents(messages=True, guilds=True)
 @bot.event
 async def on_ready():
     print(f"✓ Logged in as {bot.user} ({bot.user.id})")
-    if DEBUG:
+    if os.getenv('DEBUG_GUILD'):
         debug_guild = await bot.fetch_guild(DEBUG)
         print(f"✓ Debug guild is {debug_guild.name} ({DEBUG})")
     print("~~~~~ <コ:彡 ~~~~~")
