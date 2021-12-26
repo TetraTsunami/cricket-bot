@@ -11,8 +11,8 @@ import json
 print("~~~~ Cricket! ~~~~")
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-DEBUG = int(os.getenv('DEBUG_GUILD'))
-SUPPORT_GUILD = int(os.getenv('SUPPORT_GUILD'))
+if os.getenv('DEBUG_GUILD'): DEBUG = int(os.getenv('DEBUG_GUILD'))
+if os.getenv('SUPPORT_GUILD'): SUPPORT_GUILD = int(os.getenv('SUPPORT_GUILD'))
 
 cogs_dir = "cogs"
 activity = discord.Activity(type=discord.ActivityType.listening, name="crickets, chirp!")
