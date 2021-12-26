@@ -64,12 +64,14 @@ class Image_gen(commands.Cog):
         box_list = [box1,box2,box3,box4,box5]
         for box in box_list: re.sub('box\d is not used. Press here to skip.|Type the contents of box\d','',box)
         box_list = [i for i in box_list if i]
-        
-        image = api.caption_image(meme=name_to_id(meme),boxes=box_list)
-        meme_url = image['url']
-        embed=discord.Embed(color=0xc84268)
-        embed.set_image(url=meme_url)
-        await ctx.respond(embed=embed)
+        try:
+            image = api.caption_image(meme=name_to_id(meme),boxes=box_list)
+            meme_url = image['url']
+            embed=discord.Embed(color=0xc84268)
+            embed.set_image(url=meme_url)
+            await ctx.respond(embed=embed)
+        except Exception as e:
+            await ctx.respond(embed=simple_embed('ImgFlip API','Failure',f'{e.__class__.__name__}: {e}'))
         
 def name_to_boxes(name: str):
     for meme in MEME_LIST:
