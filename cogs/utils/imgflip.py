@@ -76,55 +76,8 @@ class Imgflip(object):
             return [Meme.fromJSON(meme) for meme in response['data']['memes']]
         else:
             raise RuntimeError("Imgflip returned error message: " + response['error_message'])
-
-
-    def caption_image(self, meme, text0, text1, font='impact', max_font_size=50):
-        """
-        Add a caption to an Imgflip meme template.
-
-        Args:
-            meme (pyimgflip.Meme, int): Accepts either a Meme object or a valid Imgflip template ID.
-            text0 (str): The top text for the meme.
-            text1 (str): The bottom text for the meme.
-            font (str): Current options are 'impact' and 'arial'. Defaults to 'impact'.
-            max_font_size (int): Maximum font size in pixels. Defaults to 50px.
-        Returns:
-            A dictionary as with keys "url" and "page_url" as reported by Imgflip.
-        Raises:
-            HTTPError: if the API cannot be reached or returns an invalid response.
-            RuntimeError: if the API indicates an unsuccessful response.
-            TypeError: if meme id is an invalid type
-            ValueError: if font is passed an incorrect value
-        """
-        url = 'https://api.imgflip.com/caption_image'
-        if self.username is None or self.password is None:
-            raise RuntimeError("Username and password required to caption image.")
-        try: 
-            try:
-                template_id = int(meme.id)
-            except AttributeError as e:
-                template_id = int(meme)
-        except ValueError as e:
-            raise TypeError("Meme id must be a numeric value.")
-
-        font_clean = font.lower().strip()
-        if font_clean != 'impact' and font_clean != 'arial':
-            raise ValueError("Font parameter must be either 'impact' or 'arial'.")
-
-        payload = {'username':self.username, 'password':self.password,
-                   'template_id':template_id, 
-                   'text0':text0, 'text1':text1, 
-                   'font':font_clean, 'max_font_size':max_font_size}
-
-        r = requests.post(url, data=payload)
-        r.raise_for_status()
-        response = r.json()
-        if response['success']:
-            return response['data']
-        else:
-            raise RuntimeError("Imgflip returned error message: " + response['error_message'])
         
-    def caption_image_boxes(self, meme, boxes, font='impact', max_font_size=50):
+    def caption_image(self, meme, boxes, font='impact', max_font_size=50):
         """
         Uses Imgflip's more advanced 'boxes' interface for maximum customization.
         See https://api.imgflip.com for usage details.
@@ -193,7 +146,7 @@ class Meme(object):
         height (int): Image height in pixels.
     """
 
-    def __init__(self, id, name='', url='', width=0, height=0):
+    def __init__(self, id, name='', url='', width=0, height=0, box_count=0):
         """
         Create a new Meme instance
 
@@ -211,6 +164,7 @@ class Meme(object):
         self.url = url
         self.width = width
         self.height = height
+        self.box_count = box_count
 
     @classmethod
     def fromJSON(cls, data):
