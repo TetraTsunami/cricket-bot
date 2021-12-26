@@ -77,14 +77,14 @@ class Imgflip(object):
         else:
             raise RuntimeError("Imgflip returned error message: " + response['error_message'])
         
-    def caption_image(self, meme, boxes, font='impact', max_font_size=50):
+    def caption_image(self, meme, boxes: list, font='impact', max_font_size=50):
         """
         Uses Imgflip's more advanced 'boxes' interface for maximum customization.
         See https://api.imgflip.com for usage details.
 
         Args:
             meme (pyimgflip.Meme, int): Accepts either a Meme object or a valid Imgflip template ID.
-            boxes (dict): Custom text boxes as specified by the API.
+            boxes (list): Custom text boxes
             font (str): Current options are 'impact' and 'arial'. Defaults to 'impact'.
             max_font_size (int): Maximum font size in pixels. Defaults to 50px.
         Returns:
@@ -112,10 +112,13 @@ class Imgflip(object):
 
         payload = {'username':self.username, 'password':self.password,
                    'template_id':template_id, 
-                   'text0':'', 'text1':'', 
-                   'boxes':boxes,
                    'font':font_clean, 'max_font_size':max_font_size}
+        
+        for i , item in enumerate(boxes):
+            payload[f"boxes[{i}][text]"] = item
 
+        test_r = requests.post("http://httpbin.org/post", data=payload)
+        print(test_r.text)
         r = requests.post(url, data=payload)
         r.raise_for_status()
         response = r.json()
