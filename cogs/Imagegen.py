@@ -27,7 +27,7 @@ class Image_gen(commands.Cog):
     memegen = SlashCommandGroup("memegen", "Generate memes")
         
     @memegen.command(description="Turns your text into Minecraft text")
-    async def minecraft_say(self, ctx, text: Option(str, description="What you'd like to say", required=True)):
+    async def minecraft(self, ctx, text: Option(str, description="What you'd like to say", required=True)):
         if len(text) <= 100:
             try:
                 text_on_img(text=f"<{ctx.author.name}> {text}", size=32, color=(255,255,255))
