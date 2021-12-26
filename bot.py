@@ -17,7 +17,7 @@ if os.getenv('DEBUG_GUILD'): DEBUG = int(os.getenv('DEBUG_GUILD'))
 cogs_dir = "cogs"
 activity = discord.Activity(type=discord.ActivityType.listening, name="crickets, chirp!")
 
-if DEBUG: bot = commands.Bot(command_prefix="c!", activity=activity, debug_guilds=[DEBUG])
+if os.getenv('DEBUG_GUILD'): bot = commands.Bot(command_prefix="c!", activity=activity, debug_guilds=[DEBUG])
 else: bot = commands.Bot(command_prefix="c!", activity=activity)
 intents = discord.Intents(messages=True, guilds=True)
 
