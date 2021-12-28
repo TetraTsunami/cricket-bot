@@ -49,16 +49,16 @@ if __name__ == "__main__":
 async def ping(ctx):
     await ctx.respond(embed=simple_embed(f"⚡ {round(bot.latency * 1000)} ms"))
 
-module = bot.create_group(
+module = SlashCommandGroup(
     "module",
-    "Manage backend modules"
-    # permissions=[
-    #     Permission(
-    #         bot.owner_id, 2, True
-    #     )
-    # ],
+    "Manage backend modules",
+    permissions=[
+        Permission(
+            "owner", 2, True
+        )
+    ]
 )
-        
+
 @module.command(description="Load a backend module", guild_ids=[SUPPORT_GUILD])
 async def load(ctx, module: Option(str, "Name of the cog to load", autocomplete=discord.utils.basic_autocomplete(list_cogs()))):
     try:
