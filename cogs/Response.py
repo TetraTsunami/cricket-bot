@@ -64,7 +64,7 @@ class Fun(commands.Cog):
 
         if re.search('(?i)^wah\?$', message.content):
             async with message.channel.typing():
-                await message.author.avatar.url.save("avatar_image_gen.png")
+                await message.author.avatar.save("avatar_image_gen.png")
                 im1 = Image.open('avatar_image_gen.png').resize((115,115))
                 im2 = Image.open('wah_outfit.png')
                 image = Image.new("RGBA", (280,367), (255, 255, 255, 0))
@@ -77,7 +77,7 @@ class Fun(commands.Cog):
         
         if (re.search('(?i)^wah.?$', message.content) and message.author.id == 361660269694287883):
             async with message.channel.typing():
-                image = Image.open("wah.png")
+                image = Image.open("./image_gen/wah.png")
                 angle=random.randrange(0,360,1)
                 image.rotate(angle,expand=True,fillcolor=None).save("./image_gen/image_gen.png", "PNG")
                 transparency()
