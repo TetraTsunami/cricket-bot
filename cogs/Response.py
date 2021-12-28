@@ -64,7 +64,7 @@ class Fun(commands.Cog):
 
         if re.search('(?i)^wah\?$', message.content):
             async with message.channel.typing():
-                await message.author.avatar_url.save("avatar_image_gen.png")
+                await message.author.avatar.url.save("avatar_image_gen.png")
                 im1 = Image.open('avatar_image_gen.png').resize((115,115))
                 im2 = Image.open('wah_outfit.png')
                 image = Image.new("RGBA", (280,367), (255, 255, 255, 0))
