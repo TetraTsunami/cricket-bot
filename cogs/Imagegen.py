@@ -22,7 +22,7 @@ def imgflip_setup(api):
     page_list = []
     for idx,i in enumerate(chunks(memes, 10)):
         page_header = 'These templates can be used in `/memegen generate`\n\n'
-        page_contents = '\n'.join(f'{str(element.name)} ({element.box_count} boxes)' for element in i)
+        page_contents = '\n'.join(f'[{str(element.name)}]({str(element.url)}) ({element.box_count} boxes)' for element in i)
         page_list.append(discord.Embed(title=f"Meme Generator Page {idx+1}",description=''.join([page_header, page_contents]),color=0xc84268))
     return {'meme_list':memes,
             'meme_names':names,
