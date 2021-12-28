@@ -3,23 +3,39 @@ import re
 
 import discord
 from discord.commands import Option, SlashCommandGroup
-from discord.ext import commands
+from discord.ext import commands, pages
 from dotenv import load_dotenv
 
 from .utils.embed import simple_embed
 from .utils.image import text_on_img, transparency
 from .utils.imgflip import Imgflip
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+def imgflip_setup(api):
+    memes = api.get_memes()
+    names = []
+    for meme in memes:
+        names.append(meme.name)
+    page_list = []
+    for idx,i in enumerate(chunks(memes, 10)):
+        page_header = 'These templates can be used in `/memegen generate`\n\n'
+        page_contents = '\n'.join(f'{str(element.name)} ({element.box_count} boxes)' for element in i)
+        page_list.append(discord.Embed(title=f"Meme Generator Page {idx+1}",description=''.join([page_header, page_contents]),color=0xc84268))
+    return {'meme_list':memes,
+            'meme_names':names,
+            'paginator_list':page_list
+            }
+    
 load_dotenv()
-IMGFLIP_USERNAME = os.getenv('IMGFLIP_USERNAME')
-IMGFLIP_PASSWORD = os.getenv('IMGFLIP_PASSWORD')
-api = Imgflip(username=IMGFLIP_USERNAME,password=IMGFLIP_PASSWORD)
-MEME_LIST = api.get_memes()
-names = []
-for meme in MEME_LIST:
-    names.append(meme.name)
-MEME_NAMES = names
-
+imgflip = {
+    'username': os.getenv('IMGFLIP_USERNAME'),
+    'password': os.getenv('IMGFLIP_PASSWORD'),
+}
+api = Imgflip(username=imgflip['username'],password=imgflip['password'])
+imgflip.update(imgflip_setup(api))
 class Image_gen(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -54,7 +70,7 @@ class Image_gen(commands.Cog):
     async def generate(
         self, 
         ctx: discord.ApplicationContext, 
-        meme: Option(str, description="Select a meme format", autocomplete=discord.utils.basic_autocomplete(MEME_NAMES), required=True),
+        meme: Option(str, description="Select a meme format", autocomplete=discord.utils.basic_autocomplete(imgflip['meme_names']), required=True),
         box1: Option(str, description="Text field 1", autocomplete=text_box_helper, required=False) = '',
         box2: Option(str, description="Text field 2", autocomplete=text_box_helper, required=False) = '',
         box3: Option(str, description="Text field 3", autocomplete=text_box_helper, required=False) = '',
@@ -73,14 +89,19 @@ class Image_gen(commands.Cog):
         except Exception as e:
             await ctx.respond(embed=simple_embed('ImgFlip API','Failure',f'{e.__class__.__name__}: {e}'))
         
+    @memegen.command(description="Lists meme formats in the imgflip API")
+    async def list(self,ctx):
+        paginator = pages.Paginator(pages=imgflip['paginator_list'], show_disabled=True, show_indicator=True)
+        await paginator.send(ctx)
+    
 def name_to_boxes(name: str):
-    for meme in MEME_LIST:
+    for meme in imgflip['meme_list']:
         if meme.name == name: return meme.box_count
         else: pass
     raise ValueError('There is no meme with provided name')
 
 def name_to_id(name: str):
-    for meme in MEME_LIST:
+    for meme in imgflip['meme_list']:
         if meme.name == name: return meme.id
         else: pass
     raise ValueError('There is no meme with provided name')
