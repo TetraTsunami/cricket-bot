@@ -17,7 +17,8 @@ def simple_embed(title='None',icon='None',status='None'):
         'None':'',
         'idk':'❌ Something broke somewhere, try again later',
         'Permissions':'❌ I don\'t have permission to do that :(',
-        'Length':'❌Please don\'t paste the entire Bee Movie script, it\'s much too long'
+        'Length':'❌ Please don\'t paste the entire Bee Movie script, it\'s much too long',
+        'NotFound':'❌ I couldn\'t find what you\'re looking for, sorry'
               }
     if status in STATUS_KEY:
         description = STATUS_KEY[status]
