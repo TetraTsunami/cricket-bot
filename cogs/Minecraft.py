@@ -23,8 +23,8 @@ class Minecraft(commands.Cog):
         self, 
         ctx, 
         server: Option(str, 'Address of the server'), 
-        plugins: Option(bool, 'Try to list the server\'s plugins') = False,
-        hidden: Option(bool, 'Only shows results to you') = False
+        plugins: Option(bool, 'Try to list the server\'s plugins', required=False) = False,
+        hidden: Option(bool, 'Only shows results to you', required=False) = False
         # persistent=False
         ):
         await ctx.defer()

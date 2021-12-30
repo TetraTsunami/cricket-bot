@@ -18,16 +18,16 @@ class Discord(commands.Cog):
         
     discord_utils = SlashCommandGroup("discord", "Commands related to Discord.")
     
-    @discord_utils.command(description="Returns info about a user (or yourself!)")
+    @discord_utils.command(description="Returns info about a user")
     async def user(
         self,
         ctx,
-        user: Option(discord.Member, 'Who you would like to harass (or nobody at all)') = 0, 
-        hidden: Option(bool, 'Show results in an ephemeral message') = False
+        target: Option(str, 'The user you would like to harass') = 0, 
+        hidden: Option(bool, 'Show results in an ephemeral message', required=False) = False
                    ):
-        if user == 0:
-            user = ctx.author
-            user = await self.bot.fetch_user(re.sub(r'^<@|!|>$', '', user))
+        user = self.bot.get_user(re.sub('^<@|!|>$', '', target))
+        if user == None:
+            user = await self.bot.fetch_user(re.sub('^<@|!|>$', '', target))
         embed = discord.Embed(title=f'{user.name}#{user.discriminator}', description=user.mention, color=0xc84268)
         embed.set_thumbnail(url=user.avatar.url)
         embed.add_field(name="ID", value=user.id, inline=False)
@@ -43,8 +43,8 @@ class Discord(commands.Cog):
     async def activity(
         self,
         ctx,
-        activity: Option(str, 'Activity (defaults to YouTube)', choices=['Betrayal.io', 'Chess In The Park', 'YouTube Together']) = 'YouTube Together', 
-        hidden: Option(bool, 'Show results in an ephemeral message') = False
+        activity: Option(str, 'Activity (defaults to YouTube)', choices=['Betrayal.io', 'Chess In The Park', 'YouTube Together'], Required=False) = 'YouTube Together', 
+        hidden: Option(bool, 'Show results in an ephemeral message', Required=False) = False
                    ):
         ACTIVITY_IDS = {
             'Betrayal.io':773336526917861400, 

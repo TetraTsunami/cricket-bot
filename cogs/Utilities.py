@@ -27,7 +27,7 @@ class Utilities(commands.Cog):
             await ctx.respond(embed=simple_embed('View Deleted Messages','Discord','NotFound'),ephemeral=True)
             return
         cache = deleted_messages[ctx.guild.id] 
-        page_contents = '\n\n'.join(f'{discord.utils.format_dt(time, style="R")} from {str(message.author.mention)}:\n{message.clean_content}' for time, message in cache.items())
+        page_contents = '\n\n'.join(f'{discord.utils.format_dt(time, style="R")} in {message.channel.mention} from {message.author.mention}:\n{message.clean_content}' for time, message in cache.items())
         await ctx.respond(embed=simple_embed('View Deleted Messages','Discord',page_contents),ephemeral=True)
         
     @snipe.command(description="View recently edited messages", default_permission=False) 
@@ -38,7 +38,7 @@ class Utilities(commands.Cog):
             return
         cache_before = edited_messages['before'][ctx.guild.id]
         cache_after = edited_messages['after'][ctx.guild.id] 
-        page_contents = '\n\n'.join(f'{discord.utils.format_dt(time, style="R")} by {str(message.author.mention)}:\n**FROM:** {cache_before[idx].content}\n**TO:** {message.clean_content}' for idx, (time, message) in enumerate(cache_after.items()))
+        page_contents = '\n\n'.join(f'{discord.utils.format_dt(time, style="R")} in {message.channel.mention} by {message.author.mention}:\n**FROM:** {cache_before[idx].content}\n**TO:** {message.clean_content}' for idx, (time, message) in enumerate(cache_after.items()))
         await ctx.respond(embed=simple_embed('View Edited Messages','Discord',page_contents),ephemeral=True)
         
     @commands.Cog.listener()
@@ -53,7 +53,7 @@ class Utilities(commands.Cog):
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         guild = after.guild.id
-        if before.content == after.content: return
+        if before.content == after.content or after.author.bot == True: return
         if guild not in edited_messages['after']:
             edited_messages['before'][guild] = []
             edited_messages['after'][guild] = {}
