@@ -101,6 +101,9 @@ class Fun(commands.Cog):
                     
         if re.search('(?i)^wah.?$', message.content) and cooldown(message.author.id, 'wah', 10) and cooldown(message.guild.id, 'guild.wah', 60*60*24, write=False) == True:
             await message.channel.send(random.choice(obtain_text('wah')))
+            
+        if re.search('(?i)^waku.?.?waku.?$', message.content):
+            await message.channel.send('hooray!')
 
 
 def obtain_text(file: str):
