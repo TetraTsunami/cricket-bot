@@ -16,7 +16,7 @@ from .utils.image import text_on_img, transparency
 load_dotenv()
 if os.getenv('DEEPMOJI_URL'):
     deepmoji_url = os.getenv('DEEPMOJI_URL')
-    if os.getenv('DEEPMOJI_FREQUENCY'): deepmoji_frequency = os.getenv('DEEPMOJI_FREQUENCY')
+    if os.getenv('DEEPMOJI_FREQUENCY'): deepmoji_frequency = int(os.getenv('DEEPMOJI_FREQUENCY'))
     else: deepmoji_frequency = 0.05
     print('… Testing connection to Deepmoji server', end = "\r")
     # Test it
@@ -132,7 +132,7 @@ class Fun(commands.Cog):
         if random.random() <= deepmoji_frequency:
         # 30% chance to trigger, but we have a high prob setting so it may not go off all that often
             try:
-                emoji = get_emoji(message.content, deepmoji_url, 0.12)
+                emoji = get_emoji(message.content, deepmoji_url, 0.10)
                 # print(f'got {emoji} for "{message.content}"')
                 if emoji:
                     await message.add_reaction(emoji[0]['emoji'])
