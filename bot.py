@@ -24,7 +24,7 @@ intents = discord.Intents(messages=True, guilds=True)
 
 @bot.event
 async def on_ready():
-    print(f"✓ Logged in as {bot.user} ({bot.user.id})")
+    print(f"\r✓ Logged in as {bot.user} ({bot.user.id})", end = "\n")
     if os.getenv('DEBUG_GUILD'):
         debug_guild = await bot.fetch_guild(DEBUG)
         print(f"✓ Debug guild is {debug_guild.name} ({DEBUG})")
@@ -44,7 +44,11 @@ if __name__ == "__main__":
         except Exception as e:
             print(f'{progress}/{total} {extension} broke!')
             print(f"→ {sys.exc_info()}")
-
+        except KeyboardInterrupt:
+            print('\ncya!')
+            quit()
+    print('\r… Modules loaded, logging in to Discord', end = "\r")
+    
 @bot.slash_command(description="Returns info about the bot's ping")
 async def ping(ctx):
     await ctx.respond(embed=simple_embed(f"⚡ {round(bot.latency * 1000)} ms"))

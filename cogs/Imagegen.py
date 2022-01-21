@@ -29,14 +29,27 @@ def imgflip_setup(api):
             'meme_names':names,
             'paginator_list':page_list
             }
-    
+
 load_dotenv()
-imgflip = {
+if os.getenv('IMGFLIP_USERNAME') and os.getenv('IMGFLIP_PASSWORD'):
+    imgflip = {
     'username': os.getenv('IMGFLIP_USERNAME'),
     'password': os.getenv('IMGFLIP_PASSWORD'),
-}
-api = Imgflip(username=imgflip['username'],password=imgflip['password'])
-imgflip.update(imgflip_setup(api))
+    }
+    
+    print('\r… Getting Imgflip data', end = "\r")
+    # Test it
+    try:
+        api = Imgflip(username=imgflip['username'],password=imgflip['password'])
+        imgflip.update(imgflip_setup(api))
+        print('\r✓ Successfully got Imgflip data', end = "\r")
+    except Exception as e:
+        print(f'\r✗ Imgflip failed with {e}', end = "\r")
+    print()
+    
+else:
+    print('✗ No Imgflip login specified')
+
 class Image_gen(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
