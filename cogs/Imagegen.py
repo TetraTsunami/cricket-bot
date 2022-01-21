@@ -42,10 +42,9 @@ if os.getenv('IMGFLIP_USERNAME') and os.getenv('IMGFLIP_PASSWORD'):
     try:
         api = Imgflip(username=imgflip['username'],password=imgflip['password'])
         imgflip.update(imgflip_setup(api))
-        print('\r✓ Successfully got Imgflip data', end = "\r")
+        print('✓ Successfully got Imgflip data')
     except Exception as e:
-        print(f'\r✗ Imgflip failed with {e}', end = "\r")
-    print()
+        print(f'✗ Imgflip failed with {e}')
     
 else:
     print('✗ No Imgflip login specified')
