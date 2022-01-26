@@ -33,6 +33,10 @@ class Fun(commands.Cog):
             await message.channel.send('...')
             time.sleep(0.5)
             await message.channel.send('stop it')
+            
+        if re.search('(?i)^hey y?\'?all,? scott here.?', message.content):
+            await message.channel.send('https://media.discordapp.net/attachments/377256114439585793/935748176038731906/Youre_not_Scott.png')
+            
 
         if re.search('(?i)\suwu', message.content):
             if random.choice([0, 0, 0, 1]):
