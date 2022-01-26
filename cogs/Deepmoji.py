@@ -40,6 +40,7 @@ class Deepmoji(commands.Cog):
         self,
         ctx:discord.ApplicationContext, 
         sentence: str):
+        """Returns the top 10 emoji reactions for a given sentence"""
         try:
             emoji = get_emoji(sentence, deepmoji_url, min_prob=0, results=10)
             # print(f'got {emoji} for "{message.content}"')
