@@ -1,38 +1,13 @@
-import os
 import random
 import re
 import time
 
 import discord
-import requests
 from discord.ext import commands
-from dotenv import load_dotenv
 from PIL import Image
 
 from .utils.cooldown import cooldown
-from .utils.deepmoji import get_emoji
 from .utils.image import text_on_img, transparency
-
-load_dotenv()
-if os.getenv('DEEPMOJI_URL'):
-    deepmoji_url = os.getenv('DEEPMOJI_URL')
-    if os.getenv('DEEPMOJI_FREQUENCY'): deepmoji_frequency = int(os.getenv('DEEPMOJI_FREQUENCY'))
-    else: deepmoji_frequency = 0.05
-    print('… Testing connection to Deepmoji server', end = "\r")
-    # Test it
-    try:
-        get_emoji('I dislike it when bugs are loud', deepmoji_url)
-        print('✓ Successfully connected to Deepmoji server')
-        deepmoji = True
-    except Exception as e:
-        print(f'✗ Connection to Deepmoji server failed with {e}')
-        deepmoji = False
-    
-else:
-    deepmoji = False
-    print('✗ No Deepmoji server specified')
-# Download it at https://github.com/nolis-llc/DeepMoji-docker
-
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -129,15 +104,7 @@ class Fun(commands.Cog):
         if re.search('(?i)^waku.?.?waku.?$', message.content):
             await message.channel.send('hooray!')
             
-        if random.random() <= deepmoji_frequency:
-        # 30% chance to trigger, but we have a high prob setting so it may not go off all that often
-            try:
-                emoji = get_emoji(message.content, deepmoji_url, 0.10)
-                # print(f'got {emoji} for "{message.content}"')
-                if emoji:
-                    await message.add_reaction(emoji[0]['emoji'])
-            except requests.exceptions.HTTPError as e:
-                print(f'Deepmoji error "{e}" on message "{message.content}"')
+        
 
 
 
