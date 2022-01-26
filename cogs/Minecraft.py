@@ -1,16 +1,36 @@
 import base64
 import io
+import json
 import re
 import socket
 import sys
 
 import discord
+import requests
 from discord.commands import Option, SlashCommandGroup, slash_command
 from discord.ext import commands
 from mcstatus import MinecraftServer
 
 from .utils.embed import simple_embed
 
+MINECRAFT_ICON="<:GrassBlock:924075881562009640>"
+
+def get_username_history(uuid: int) -> list:
+    res = requests.get(f'https://api.mojang.com/user/profiles/{uuid}/names')
+    res.raise_for_status()
+    history = json.loads(res.content)
+    page = []
+    for i in reversed(history):
+        if "changedToAt" in i:
+            page.append(f'**{i["name"]}** - <t:{round(i["changedToAt"]/1000)}>')
+        else:
+            page.append(f'**{i["name"]}**')
+    return page
+
+def get_textures(uuid: int) -> list:
+    res = requests.get(f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}")
+    res.raise_for_status()
+    return json.loads(base64.b64decode(json.loads(res.content)['properties'][0]['value']))
 
 class Minecraft(commands.Cog):
     def __init__(self, bot):
@@ -31,7 +51,7 @@ class Minecraft(commands.Cog):
         try:
             target = MinecraftServer.lookup(server)
             status = target.status()
-            embed = discord.Embed(title=server, color=0xc84268)
+            embed = discord.Embed(title=f'{MINECRAFT_ICON} {server}', color=0xc84268)
             embed.add_field(name="Version", value=status.version.name)
             embed.add_field(
                 name="Players", value=f"{status.players.online}/{status.players.max}")
@@ -66,6 +86,38 @@ class Minecraft(commands.Cog):
         except:
             await ctx.respond(embed=simple_embed(server, 'Minecraft','idk'),ephemeral=hidden)
             print(sys.exc_info())
+        
+    @minecraft_utils.command(description="Returns info about a Minecraft account")
+    async def user(
+        self, 
+        ctx, 
+        user: Option(str, 'The account\'s username or UUID'), 
+        hidden: Option(bool, 'Only shows results to you', required=False) = False
+        ):
+        await ctx.defer()
+        # If given username, convert to uuid
+        if re.search("[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}",user):
+            uuid = user
+        else:
+            try:
+                usnam = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{user}")
+                usnam.raise_for_status()
+                uuid = json.loads(usnam.content)['id']
+            except:
+                print('oopsie')
+        # Get profile of uuid
+        textures = get_textures(uuid)
+        history = get_username_history(uuid)
+        
+        # Build embed
+        embed = simple_embed(textures['profileName'],'Minecraft')
+        embed.add_field(name='UUID', value=textures['profileId'])
+        embed.add_field(name='Skin Download', value=f'[Click here to download textures]({textures["textures"]["SKIN"]["url"]})')
+        embed.add_field(name="Username History", value='\n'.join(history), inline=False)
+        embed.set_image(url=f'https://mc-heads.net/body/{uuid}')
+        embed.set_thumbnail(url=f'https://mc-heads.net/avatar/{uuid}')
+        await ctx.respond(embed=embed, ephemeral=hidden)
+
         
 def setup(bot):
     bot.add_cog(Minecraft(bot))
