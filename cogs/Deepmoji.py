@@ -39,7 +39,8 @@ class Deepmoji(commands.Cog):
     async def deepmoji(
         self,
         ctx:discord.ApplicationContext, 
-        sentence: str):
+        sentence: str,
+        hidden: Option(bool, 'Only shows results to you', required=False) = False):
         """Returns the top 10 emoji reactions for a given sentence"""
         try:
             emoji = get_emoji(sentence, deepmoji_url, min_prob=0, results=10)
@@ -47,10 +48,10 @@ class Deepmoji(commands.Cog):
             page = [f'*{sentence}*']
             for i in emoji:
                 page.append(f'{i["emoji"]}: **{round(i["prob"]*100)}%**')
-            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="😀", status='\n'.join(page)))
+            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="😀", status='\n'.join(page)), ephemeral=hidden)
                 
         except requests.exceptions.HTTPError as e:
-            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="Failure", status=f'Deepmoji error "{e}" on message "{ctx.message.content}"'))
+            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="Failure", status=f'Deepmoji error "{e}" on message "{ctx.message.content}"'), ephemeral=True)
         
         
     @commands.Cog.listener()
