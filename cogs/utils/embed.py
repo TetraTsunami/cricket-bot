@@ -12,7 +12,11 @@ def simple_embed(title='None',icon='None',status='None'):
         'Smash':'<:smashicon:895839672956239882>',
         'Minecraft':'<:GrassBlock:924075881562009640>'
               }
-    emoji = EMOJI_KEY[icon]
+    if icon in EMOJI_KEY:
+        emoji = EMOJI_KEY[icon]
+    else: 
+        emoji = icon
+        
     STATUS_KEY = {
         'None':'',
         'idk':'❌ Something broke somewhere, try again later',
