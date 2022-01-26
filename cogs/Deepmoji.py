@@ -68,4 +68,5 @@ class Deepmoji(commands.Cog):
                         
 
 def setup(bot):
-    bot.add_cog(Deepmoji(bot))
+    if deepmoji:
+        bot.add_cog(Deepmoji(bot))
