@@ -45,7 +45,7 @@ async def ping_server(server: str, plugins: bool) -> discord.Embed:
             pass
     #Build embed
     status = await status_async
-    embed = discord.Embed(title=f'{MINECRAFT_ICON} {server}', color=0xc84268)
+    embed = discord.Embed(title=f'{server}', description=f'Updated {discord.utils.format_dt(datetime.datetime.now(), "R")}',color=0xc84268)
     embed.add_field(name="Version", value=status.version.name)
     embed.add_field(
         name="Players", value=f"{status.players.online}/{status.players.max}")
@@ -74,7 +74,6 @@ async def ping_server(server: str, plugins: bool) -> discord.Embed:
             embed.add_field(name="Online", value='\n'.join(player.name for player in status.players.sample), inline=False)
     except:
         pass
-    embed.set_footer(text=f"Updated {discord.utils.format_dt(datetime.datetime.now(),'R')}")
     return embed, file
 
 # class Refresh(discord.ui.View):
@@ -90,18 +89,18 @@ class Refresh(discord.ui.View):
         super().__init__(timeout=None)
         self.server = ""
         self.plugins = False
-        self.file = discord.File
 
     @discord.ui.button(
-        style=discord.ButtonStyle.blurple, label="Refresh", custom_id="minecraft:refreshserver"
+        style=discord.ButtonStyle.red, label="Refresh", custom_id="minecraft:refreshserver"
     )
     async def refresh(self, button: discord.ui.Button, interaction: discord.Interaction):
-        try:
             await interaction.response.defer()
             embed, file = await ping_server(self.server, self.plugins)
-            await interaction.response.edit_message(embed=embed)
-        except:
-            pass
+            view = Refresh()
+            view.server = self.server
+            view.plugins = self.plugins
+            await interaction.message.edit(embed=embed, file=file, view=view)
+            # await interaction.followup.send(content="yo!")
         #     await interaction.response.defer()
         #     embed, file = await ping_server(server, plugins)
         #     await interaction.response.edit_message(embed=embed, file=file)
@@ -147,7 +146,6 @@ class Minecraft(commands.Cog):
                 view = Refresh()
                 view.server = server
                 view.plugins = plugins
-                view.file = file
             else: view = None
             await ctx.respond(embed=embed, ephemeral=hidden, file=file, view=view)
         except asyncio.exceptions.TimeoutError as e:
