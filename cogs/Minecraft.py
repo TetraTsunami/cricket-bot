@@ -102,9 +102,11 @@ class Minecraft(commands.Cog):
             try:
                 usnam = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{user}")
                 usnam.raise_for_status()
+                if usnam.status_code == 204:
+                    return await ctx.respond(embed=simple_embed(user,"Minecraft",f"Invalid username"))
                 uuid = json.loads(usnam.content)['id']
             except:
-                print('oopsie')
+                return await ctx.respond(embed=simple_embed(user,"Minecraft",f"idk"))
         # Get profile of uuid
         textures = get_textures(uuid)
         history = get_username_history(uuid)
