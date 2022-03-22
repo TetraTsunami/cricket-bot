@@ -62,10 +62,13 @@ class Fun(commands.Cog):
                 else:
                     await message.channel.send('knock it off, funnyman')
 
+        if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'bread', 60*60):
+            await message.channel.send('https://media.discordapp.net/attachments/881244618019205150/955828769308942346/bread.png')
+        
         if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'cricket', 60*60*24) == True:
             await message.channel.send('i\'m literally right here wow')
 
-        if re.search('(?i)^wah\?$', message.content):
+        if re.search('(?i)^wah\?$', message.content) and cooldown(message.author.id, 'wah_generator', 60*60):
             async with message.channel.typing():
                 await message.author.avatar.save("./image_gen/avatar_image_gen.png")
                 im1 = Image.open('./image_gen/avatar_image_gen.png').resize((115,115))
