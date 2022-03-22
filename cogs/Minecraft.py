@@ -15,8 +15,6 @@ from discord.ext.commands.context import Context
 
 from .utils.embed import simple_embed
 
-MINECRAFT_ICON="<:GrassBlock:924075881562009640>"
-
 def get_username_history(uuid: int) -> list:
     res = requests.get(f'https://api.mojang.com/user/profiles/{uuid}/names')
     res.raise_for_status()
@@ -75,18 +73,10 @@ async def ping_server(server: str, plugins: bool) -> discord.Embed:
     except:
         pass
     return embed, file
-
-# class Refresh(discord.ui.View):
-#     def __init__(self, label, style, emoji):
-#         super().__init__()
-        
-#     @discord.ui.button(label="Refresh", style=discord.ButtonStyle.blurple)
-#     async def refresh(self, button: discord.ui.Button, int: discord.Interaction):
-#         await int.response.send_message("Hello!", ephemeral=True)
-
+            
 class Refresh(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None)
+        super().__init__(timeout=86400)
         self.server = ""
         self.plugins = False
 
@@ -94,39 +84,19 @@ class Refresh(discord.ui.View):
         style=discord.ButtonStyle.red, label="Refresh", custom_id="minecraft:refreshserver"
     )
     async def refresh(self, button: discord.ui.Button, interaction: discord.Interaction):
+        try:
             await interaction.response.defer()
             embed, file = await ping_server(self.server, self.plugins)
             view = Refresh()
             view.server = self.server
             view.plugins = self.plugins
             await interaction.message.edit(embed=embed, file=file, view=view)
-            # await interaction.followup.send(content="yo!")
-        #     await interaction.response.defer()
-        #     embed, file = await ping_server(server, plugins)
-        #     await interaction.response.edit_message(embed=embed, file=file)
-        # except asyncio.exceptions.TimeoutError as e:
-        #     await interaction.response.edit_message(embed=simple_embed(server, 'Minecraft',f'{e.__class__.__name__}: {e}'),ephemeral=True)
-        # except:
-        #     await interaction.response.edit_message(embed=simple_embed(server, 'Minecraft','idk'),ephemeral=True)
-        #     print(sys.exc_info())
+        except Exception as e:
+            await interaction.message.edit(embed=simple_embed(self.server, 'Minecraft',f'{e.__class__.__name__}: {e}'))
         
 class Minecraft(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    # @slash_command(
-    #     name="slash_command_name", description="command description!"
-    # )
-    # async def CommandName(self, ctx):
-    #     navigator = ButtonView()  # button View <discord.ui.View>
-    #     await ctx.respond("press the button.", view=navigator)
-
-    # # for error handling
-    # @CommandName.error
-    # async def CommandName_error(self, ctx: Context, error):
-    #     return await ctx.respond(
-    #         error, ephemeral=True
-    #     )  # ephemeral makes "Only you can see this" message
         
     minecraft_utils = SlashCommandGroup("minecraft", "Commands related to Minecraft.")
     
@@ -148,11 +118,8 @@ class Minecraft(commands.Cog):
                 view.plugins = plugins
             else: view = None
             await ctx.respond(embed=embed, ephemeral=hidden, file=file, view=view)
-        except asyncio.exceptions.TimeoutError as e:
+        except Exception as e:
             await ctx.respond(embed=simple_embed(server, 'Minecraft',f'{e.__class__.__name__}: {e}'),ephemeral=True)
-        except:
-            await ctx.respond(embed=simple_embed(server, 'Minecraft','idk'),ephemeral=True)
-            print(sys.exc_info())
         
     @minecraft_utils.command(description="Returns info about a Minecraft account")
     async def user(
