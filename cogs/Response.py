@@ -62,7 +62,7 @@ class Fun(commands.Cog):
                 else:
                     await message.channel.send('knock it off, funnyman')
 
-        if re.search('(?i).*\sbread\s.*', message.content) and cooldown(message.author.id, 'bread', 60*60):
+        if re.search('(?i).*bread.*', message.content) and cooldown(message.author.id, 'bread', 60*60):
             await message.channel.send('https://media.discordapp.net/attachments/881244618019205150/955828769308942346/bread.png')
         
         if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'cricket', 60*60*24) == True:
