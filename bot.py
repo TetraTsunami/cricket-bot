@@ -7,7 +7,9 @@ from discord.ext import commands
 from discord.commands import Option, SlashCommandGroup, Permission
 import sys
 import json
+import logging
 
+logging.basicConfig(level=logging.INFO)
 print("~~~~ Cricket! ~~~~")
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
