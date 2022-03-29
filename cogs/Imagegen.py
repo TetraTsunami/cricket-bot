@@ -108,12 +108,16 @@ class Image_gen(commands.Cog):
         await paginator.send(ctx)
     
 def name_to_boxes(name: str):
+    if re.search("\s?\d{4,}\s?", name):
+        return 5
     for meme in imgflip['meme_list']:
         if meme.name == name: return meme.box_count
         else: pass
     raise ValueError('There is no meme with provided name')
 
 def name_to_id(name: str):
+    if re.search("\s?\d{4,}\s?", name):
+        return re.search("\d{8}", name).group(0)
     for meme in imgflip['meme_list']:
         if meme.name == name: return meme.id
         else: pass
