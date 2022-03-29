@@ -117,7 +117,7 @@ def name_to_boxes(name: str):
 
 def name_to_id(name: str):
     if re.search("\s?\d{4,}\s?", name):
-        return re.search("\d{8}", name).group(0)
+        return re.search("\d{4,}", name).group(0)
     for meme in imgflip['meme_list']:
         if meme.name == name: return meme.id
         else: pass
