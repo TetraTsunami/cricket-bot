@@ -18,25 +18,24 @@ class Fun(commands.Cog):
         if message.author == self.bot.user:
             return
 
+        SIMPLERESPONSE = [
+            ['(?i)^I\'m.+back.*', 'hi back', 60],
+            ['(?i)^Hi back.*', 'i\'m the only one that gets to say that, clown', 60],
+            ['(?i)^Hi the only one.*', '...stop it', 60],
+            ['(?i)^hey y?\'?all,? scott here.?', 'https://media.discordapp.net/attachments/377256114439585793/935748176038731906/Youre_not_Scott.png', 60],
+            ['(?i)cricket', 'i\'m literally right here wow', 60*60*24],
+            ['(?i).*bread.*', '<:loaf_slice:960335609589796935>', 60],
+            ['(?i).*loaf.*', '<:loaf_end:960335609430442045>', 60],
+            ['(?i)^waku.?.?waku.?$', 'hooray!', 60]
+        ]
+        
+        for i in SIMPLERESPONSE:
+            if re.search(i[0], message.content) and cooldown(message.author.id, i[0], i[3]): await message.channel.send(i[2])
+            
         if re.search('(?i)<:deadchat:\d+>', message.content):
             if message.channel.id == 541089040200368129:
                 await message.add_reaction("<:deadchat:540541091863330816>")
             return
-            
-        if re.search('(?i)^I\'m.+back.*', message.content):
-            await message.channel.send('hi back')
-
-        if re.search('(?i)^Hi back.*', message.content):
-            await message.channel.send('i\'m the only one that gets to say that, clown')
-
-        if re.search('(?i)^Hi the only one.*', message.content):
-            await message.channel.send('...')
-            time.sleep(0.5)
-            await message.channel.send('stop it')
-            
-        if re.search('(?i)^hey y?\'?all,? scott here.?', message.content):
-            await message.channel.send('https://media.discordapp.net/attachments/377256114439585793/935748176038731906/Youre_not_Scott.png')
-            
 
         if re.search('(?i)\suwu', message.content):
             if random.choice([0, 0, 0, 1]):
@@ -62,12 +61,7 @@ class Fun(commands.Cog):
                 else:
                     await message.channel.send('knock it off, funnyman')
 
-        if re.search('(?i).*bread.*', message.content) and cooldown(message.author.id, 'bread', 60):
-            await message.channel.send('https://media.discordapp.net/attachments/881244618019205150/955828769308942346/bread.png')
-        
-        if re.search('(?i)cricket', message.content) and cooldown(message.guild.id, 'cricket', 60*60*24) == True:
-            await message.channel.send('i\'m literally right here wow')
-
+        #Wah generator w/ Discord profile pics
         if re.search('(?i)^wah\?$', message.content) and cooldown(message.author.id, 'wah_generator', 60*60):
             async with message.channel.typing():
                 await message.author.avatar.save("./image_gen/avatar_image_gen.png")
@@ -81,6 +75,7 @@ class Fun(commands.Cog):
                 await message.channel.send(file=file)
             return
         
+        #Wah generator w/ rotating plushie
         if ((re.search('(?i)^wah.?$', message.content) and message.author.id == 361660269694287883) or re.search('(?i)^wah\!\?$', message.content)):
             async with message.channel.typing():
                 image = Image.open("./image_gen/wah.png")
@@ -91,6 +86,7 @@ class Fun(commands.Cog):
                 await message.channel.send(file=file)
             return
             
+        #Picture of Waluigi anti-spam measures
         if re.search('(?i)^wah.?$', message.content) and not cooldown(message.author.id, 'wah', 10, write=False):
             if not cooldown(message.guild.id, 'spam', 120):
                 if cooldown(message.guild.id, 'guild.wah', 60*60*24):
@@ -104,15 +100,11 @@ class Fun(commands.Cog):
             else:
                 responses = ["https://media.discordapp.net/attachments/716303341822672999/886051336519549019/no.jpg", "please stop spamming lol","spamming is sus. you're spamming. <:stevesmug:727202674587467857>", "i'm beginning to think y'all may have a problem","no wah. instead here's a turtle with a hat <:turtleyeehaw:873380927735205958>", f"y'all treat me like a wah machine but *i'm so much more, {message.author.mention}*", "go ask someone else for waluigi pics", "no.", "wah?"]
                 await message.channel.send(random.choice(responses))
-                    
+                
+        #Picture of Waluigi
         if re.search('(?i)^wah.?$', message.content) and cooldown(message.author.id, 'wah', 10) and cooldown(message.guild.id, 'guild.wah', 60*60*24, write=False) == True:
             await message.channel.send(random.choice(obtain_text('wah')))
             
-        if re.search('(?i)^waku.?.?waku.?$', message.content):
-            await message.channel.send('hooray!')
-            
-        
-
 
 
 def obtain_text(file: str):
