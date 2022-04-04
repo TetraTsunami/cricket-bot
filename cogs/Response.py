@@ -30,7 +30,7 @@ class Fun(commands.Cog):
         ]
         
         for i in SIMPLERESPONSE:
-            if re.search(i[0], message.content) and cooldown(message.author.id, i[0], i[3]): await message.channel.send(i[2])
+            if re.search(i[0], message.content) and cooldown(message.author.id, i[0], i[2]): await message.channel.send(i[1])
             
         if re.search('(?i)<:deadchat:\d+>', message.content):
             if message.channel.id == 541089040200368129:
