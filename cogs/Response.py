@@ -17,8 +17,6 @@ class Fun(commands.Cog):
     async def on_message(self, message):
         if message.author == self.bot.user:
             return
-
-        print(message.content)
         
         SIMPLERESPONSE = [
             ['(?i)^I\'m.+back.*', 'hi back', 60],
