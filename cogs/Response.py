@@ -22,7 +22,7 @@ class Fun(commands.Cog):
             ['(?i)^I\'m.+back.*', 'hi back', 60],
             ['(?i)^Hi back.*', 'i\'m the only one that gets to say that, clown', 60],
             ['(?i)^Hi the only one.*', '...stop it', 60],
-            ['(?i)^Hi\w?literally\w?right\w?here(wow)?.*', '...well, that\'s terribly rude of you.', 60],
+            ['(?i)^hi\s*literally\s?right\s?here\s?w?o?w?.*', '...well, that\'s terribly rude of you.', 60],
             ['(?i)^hey y?\'?all,? scott here.?', 'https://media.discordapp.net/attachments/377256114439585793/935748176038731906/Youre_not_Scott.png', 60],
             ['(?i)cricket', random.choice(['i\'m literally right here wow','yep, that\'s me!','hi!!','wazzaap','👀','i\'m not sure i agree, but okay?','your feedback has been noted. we\'ll ignore that.']), 60],
             ['(?i).*bread.*', '<:loaf_slice:960335609589796935>', 60],
