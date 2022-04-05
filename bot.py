@@ -4,7 +4,7 @@ from cogs.utils.embed import simple_embed
 import logging
 import discord
 from discord.ext import commands
-from discord.commands import Option, SlashCommandGroup, Permission
+from discord.commands import Option, SlashCommandGroup, CommandPermission
 import sys
 import json
 import logging
@@ -21,7 +21,8 @@ activity = discord.Activity(type=discord.ActivityType.listening, name="crickets,
 
 if os.getenv('DEBUG_GUILD'): bot = commands.Bot(command_prefix="c!", activity=activity, debug_guilds=[DEBUG])
 else: bot = commands.Bot(command_prefix="c!", activity=activity)
-intents = discord.Intents(messages=True, guilds=True)
+intents = discord.Intents(messages=True, guild_messages=True, guilds=True)
+discord.http.API_VERSION = 9
 
 
 @bot.event
@@ -59,7 +60,7 @@ module = SlashCommandGroup(
     "module",
     "Manage backend modules",
     permissions=[
-        Permission(
+        CommandPermission(
             "owner", 2, True
         )
     ]
