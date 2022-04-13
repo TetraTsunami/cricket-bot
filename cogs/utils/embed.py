@@ -1,6 +1,6 @@
 import discord
 
-def simple_embed(title='None',icon='None',status='None'):
+def simple_embed(title='Command Embed' ,icon='None',status='None', ctx='None', command_name='command'):
     EMOJI_KEY = {
         'None':'',
         'Success':'✅',
@@ -28,5 +28,8 @@ def simple_embed(title='None',icon='None',status='None'):
         description = STATUS_KEY[status]
     else: 
         description = status
-    return discord.Embed(title=f'{emoji} {title}', description=description, color=0xc84268)
+    embed = discord.Embed(title=f'{emoji} {title}', description=description, color=0xc84268)
+    if ctx != 'None':
+      embed.set_footer(name=f"/{command_name} | Requested by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.display_avatar.url)
+    return embed
     

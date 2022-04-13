@@ -3,6 +3,8 @@ import discord
 from discord import message
 from discord.ext import commands
 from discord.commands import slash_command, permissions, Option, SlashCommandGroup
+import owo
+
 from .utils.embed import simple_embed
 
 deleted_messages = {}
@@ -17,6 +19,12 @@ class Utilities(commands.Cog):
     async def say(self, ctx, text: Option(str, 'What you\'d like to say')):
         await ctx.channel.send(content=text)
         await ctx.respond("<:photothumbsup:886416067021381663><:Yeah:870075068644999248>",ephemeral=True)
+    
+    @slash_command(description="Owoify your text!", default_permission=False) 
+    @permissions.is_owner()
+    async def owoify(self, ctx, text: Option(str, 'What you\'d like to say')):
+        owotext = owo.owo(text)
+        await ctx.respond(embed=simple_embed('Owoify', ':3', owotext, ctx, 'owoify'), ephemeral=True)
     
     snipe = SlashCommandGroup("snipe", "View a message before it was deleted or edited")
         
@@ -47,7 +55,7 @@ class Utilities(commands.Cog):
         if guild not in deleted_messages:
             deleted_messages[guild] = {}
         deleted_messages[guild][datetime.now()] = message
-        if len(deleted_messages[guild]) > 5: deleted_messages[guild].pop(min(deleted_messages[guild]))
+        if len(deleted_messages[guild]) > 8: deleted_messages[guild].pop(min(deleted_messages[guild]))
         
         
     @commands.Cog.listener()
@@ -59,7 +67,7 @@ class Utilities(commands.Cog):
             edited_messages['after'][guild] = {}
         edited_messages['before'][guild].append(before)
         edited_messages['after'][guild][datetime.now()] = after
-        if len(edited_messages['before'][guild]) > 5: 
+        if len(edited_messages['before'][guild]) > 8: 
             edited_messages['before'][guild].pop(0)
             edited_messages['after'][guild].pop(min(edited_messages['after'][guild]))
 
