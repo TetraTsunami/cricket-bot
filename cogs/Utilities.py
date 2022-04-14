@@ -20,11 +20,10 @@ class Utilities(commands.Cog):
         await ctx.channel.send(content=text)
         await ctx.respond("<:photothumbsup:886416067021381663><:Yeah:870075068644999248>",ephemeral=True)
     
-    @slash_command(description="Owoify your text!", default_permission=False) 
-    @permissions.is_owner()
+    @slash_command(description="Owoify your text!") 
     async def owoify(self, ctx, text: Option(str, 'What you\'d like to say')):
         owotext = owo.owo(text)
-        await ctx.respond(embed=simple_embed('Owoify', ':3', owotext, ctx, 'owoify'), ephemeral=True)
+        await ctx.respond(embed=simple_embed('Owoify', 'None', owotext, ctx, 'owoify'), ephemeral=True)
     
     snipe = SlashCommandGroup("snipe", "View a message before it was deleted or edited")
         
