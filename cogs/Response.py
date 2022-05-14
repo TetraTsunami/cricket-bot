@@ -50,16 +50,7 @@ class Fun(commands.Cog):
                     return
                 await message.channel.send('https://cdn.discordapp.com/attachments/534782089846063124/879143198197448764/objection-716514-2.mp4')
                 time.sleep(0.5)
-                # print(message.author.roles)
-                # we want to respect pronouns, so if someone has a role implying otherwise, we'll try not to call them a man.
-                result = []
-                for role in message.author.roles:
-                    if re.search('(?i).*She.*|.*They.*', role.name):
-                        result.append(role.name)
-                if result:
-                    await message.channel.send('knock it off, clown')
-                else:
-                    await message.channel.send('knock it off, funnyman')
+                await message.channel.send(f'knock it off, {message.author.mention}')
 
         #Wah generator w/ Discord profile pics
         if re.search('(?i)^wah\?$', message.content) and cooldown(message.author.id, 'wah_generator', 60*60):
