@@ -7,7 +7,7 @@ from discord.ext import commands
 from PIL import Image
 
 from .utils.cooldown import cooldown
-from .utils.image import text_on_img, transparency
+from .utils.image import text_to_png, transparency
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -82,7 +82,7 @@ class Fun(commands.Cog):
             if not cooldown(message.guild.id, 'spam', 120):
                 if cooldown(message.guild.id, 'guild.wah', 60*60*24):
                     try:
-                        text_on_img(text=f"{message.author.name} spammed and ruined it for everyone", size=32)
+                        text_to_png(text=f"{message.author.name} spammed and ruined it for everyone", size=32)
                         transparency()
                         file = discord.File(fp="./image_gen/transparent_image_gen.png", filename=f"{message.author.name}_ruined_it.png")
                         await message.channel.send(file=file)

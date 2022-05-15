@@ -7,7 +7,7 @@ from discord.ext import commands, pages
 from dotenv import load_dotenv
 
 from .utils.embed import simple_embed
-from .utils.image import text_on_img, transparency
+from .utils.image import text_to_png, transparency
 from .utils.imgflip import Imgflip
 
 def chunks(lst, n):
@@ -59,7 +59,7 @@ class Image_gen(commands.Cog):
     async def minecraft(self, ctx, text: Option(str, description="What you'd like to say", required=True)):
         if len(text) <= 100:
             try:
-                text_on_img(text=f"<{ctx.author.name}> {text}", size=32, color=(255,255,255))
+                text_to_png(text=f"<{ctx.author.name}> {text}", size=32, color=(255,255,255))
                 transparency()
                 file = discord.File(fp="./image_gen/transparent_image_gen.png", filename=f"{ctx.author.name}_say.png")
                 await ctx.respond(file=file)
