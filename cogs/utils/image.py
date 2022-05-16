@@ -162,8 +162,6 @@ def resize_and_wrap_text(text, box: TextBox):
         # Otherwise, we can fit it without any shenanigans. Yay!
         return lines, font.size
 
-print(resize_and_wrap_text("The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The", TextBox((44,112),(670, 445), "./image_gen/Montserrat-ExtraBold.ttf", 90, (255,255,255))))
-
 # function copy-pasted from https://stackoverflow.com/a/14178717/744230
 def find_coeffs(source_coords, target_coords):
     matrix = []
