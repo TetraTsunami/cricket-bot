@@ -53,17 +53,19 @@ class TextBox:
         fontsize (int, optional): Fontsize. Defaults to 14.
         text_color (tuple, optional): Color of the text. Defaults to (0,0,0).
         allowWrap (bool, optional): Whether or not to allow text to wrap and shrink to avoid overflowing container. Defaults to True.
+        minFontsize (int, optional): Minimum fontsize before we start breaking words. Defaults to 0.
         angle (int, optional): Angle of the text. Defaults to 0.
         skew (int, optional): Skew of the text. Defaults to 0.
         optional (bool, optional): Whether the text box is optional. Defaults to False.
     """
-    def __init__(self, pos, dimensions, font, fontsize=14, text_color=(0,0,0), allowWrap=True, angle=0, skew=0, optional=False):
+    def __init__(self, pos, dimensions, font, fontsize=14, text_color=(0,0,0), allowWrap=True, minFontsize=0, angle=0, skew=0, optional=False):
         self.pos = pos
         self.dimensions = dimensions
         self.font = font
         self.fontsize = fontsize
         self.text_color = text_color
         self.allowWrap = allowWrap
+        self.minFontsize = minFontsize
         self.angle = angle
         self.skew = skew  
         self.optional = optional
@@ -95,13 +97,14 @@ def draw_text_to_image(TextBox, text, inputPath="./image_gen/image_gen.png", out
         # draw.multiline_text((TextBox.pos[0], TextBox.pos[1]), textWrapped, font=font, fill=TextBox.text_color)
     img.save(outputPath)
 
-def wrap_text(text, width, font: ImageFont):
+def wrap_text(text: str, width: int, font: ImageFont, break_words: bool=False):
     """Wraps text to a given width.
     
     Args:
         text (str): The text to wrap.
         width (int): The width to wrap to.
         font (ImageFont): The font to use.
+        break_words (bool, optional): Whether or not to break words. Defaults to False.
     
     Returns:
         list: Lines of wrapped text.
@@ -113,14 +116,22 @@ def wrap_text(text, width, font: ImageFont):
     lines = []
     height = 0
     line = ""
-
-    for word in text.split():
-        if font.getsize(line + word + " ")[0] > width:
+    if break_words:
+      for letter in list(text):
+        if font.getsize(line + letter)[0] > width:
             lines.append(line)
             height += font.getsize(line)[1]
-            line = word + " "
+            line = letter
         else:
-            line += word + " "
+            line += letter
+    else:
+        for word in text.split():
+            if font.getsize(line + word + " ")[0] > width:
+                lines.append(line)
+                height += font.getsize(line)[1]
+                line = word + " "
+            else:
+                line += word + " "
     if font.getsize(line)[0] > width:
         raise ValueError("Text is too long to fit in the given width without overflowing")        
     lines.append(line)
@@ -140,6 +151,7 @@ def resize_and_wrap_text(text, box: TextBox):
         int: Fontsize to use.
     """
     font = ImageFont.truetype(box.font, box.fontsize)
+    break_words = False
     try:
         lines, height = wrap_text(text, box.dimensions[0], font)
     except ValueError:
@@ -147,7 +159,11 @@ def resize_and_wrap_text(text, box: TextBox):
         while True:
             try:
                 font = ImageFont.truetype(box.font, font.size-1)
-                lines, height = wrap_text(text, box.dimensions[0], font)
+                if font.size <= box.minFontsize: 
+                    # If our font size goes below our minimum, we can't fit the text in the box without breaking someone's kneecaps. Let's enter KNEECAP BREAKING MODE and try again from the top.
+                    break_words = True
+                    font = ImageFont.truetype(box.font, box.fontsize)
+                lines, height = wrap_text(text, box.dimensions[0], font, break_words)
                 break
             except ValueError:
                 continue
@@ -155,12 +171,9 @@ def resize_and_wrap_text(text, box: TextBox):
         # Text is taller than the box, we can't fit it. Let's try again, but smaller.
         while height > box.dimensions[1]:
             font = ImageFont.truetype(box.font, font.size-1)
-            lines, height = wrap_text(text, box.dimensions[0], font)
+            lines, height = wrap_text(text, box.dimensions[0], font, break_words)
         # Now it should fit.
-        return lines, font.size
-    else:
-        # Otherwise, we can fit it without any shenanigans. Yay!
-        return lines, font.size
+    return lines, font.size
 
 # function copy-pasted from https://stackoverflow.com/a/14178717/744230
 def find_coeffs(source_coords, target_coords):
