@@ -77,8 +77,8 @@ class Image_gen(commands.Cog):
     async def sonicsays(self, ctx, text: Option(str, description="What you'd like Sonic to say", required=True)):
         if len(text) <= 500:
             try:
-                # copy template to image_gen file
-                draw_text_to_image(TextBox((44,112),(670, 445), "./image_gen/Montserrat-ExtraBold.ttf", 90, (255,255,255)), text, "./image_gen/sonic_says_template.png", "./image_gen/image_gen.png")
+                await ctx.defer()
+                draw_text_to_image(TextBox(pos=(44,112), dimensions=(670, 445), font="./image_gen/Montserrat-ExtraBold.ttf", fontsize=90, minFontsize=25, text_color=(255,255,255)), text, "./image_gen/sonic_says_template.png", "./image_gen/image_gen.png")
                 compress_image(700)
                 file = discord.File(fp="./image_gen/image_gen.png", filename=f"sonicsays_{ctx.author.name}.png")
                 await ctx.respond(embed=simple_embed("Sonic Says",imageFile=file, ctx=ctx), file=file)
