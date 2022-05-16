@@ -1,8 +1,21 @@
 import discord
 
-def simple_embed(title='Command Embed' ,icon='None',status='None', ctx='None', command_name='command'):
+
+def simple_embed(title='Command Embed', icon='', body='', imageUrl='', imageFile: discord.File = None, ctx: discord.ApplicationContext = None):
+    """Generates a simple embed with a title, icon, body, and image
+
+    Args:
+        title (str, optional): Title of the embed. Defaults to 'Command Embed'.
+        icon (str, optional): Emoji to place before the title. Defaults to no icon.
+        body (str, optional): The body of the embed. Intended to be used as a status or output for commands. Defaults to no body.
+        imageUrl (str, optional): Image URL to place in the embed. Defaults to ''.
+        imageUrl (discord.File, optional): Image file to place in the embed. Defaults to 'None'.
+        ctx (discord.ApplicationContext, optional): Ctx of the command, used to populate a rich footer. Defaults to 'None'.
+
+    Returns:
+        _type_: _description_
+    """    
     EMOJI_KEY = {
-        'None':'',
         'Success':'✅',
         'Warning':'⚠️',
         'Failure':'❌',
@@ -18,18 +31,26 @@ def simple_embed(title='Command Embed' ,icon='None',status='None', ctx='None', c
         emoji = icon
         
     STATUS_KEY = {
-        'None':'',
         'idk':'❌ Something broke somewhere, try again later',
         'Permissions':'❌ I don\'t have permission to do that :(',
         'Length':'❌ Please don\'t paste the entire Bee Movie script, it\'s much too long',
         'NotFound':'❌ I couldn\'t find what you\'re looking for, sorry'
               }
-    if status in STATUS_KEY:
-        description = STATUS_KEY[status]
-    else: 
-        description = status
-    embed = discord.Embed(title=f'{emoji} {title}', description=description, color=0xc84268)
-    if ctx != 'None':
-      embed.set_footer(text=f"/{command_name} | Requested by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.display_avatar.url)
+    embed = discord.Embed(color=0xc84268)
+    if emoji:
+        embed.title = f'{emoji} {title}'
+    else:
+        embed.title = title
+    if body:
+        if body in STATUS_KEY:
+            description = STATUS_KEY[body]
+        else: 
+            description = body
+        embed.description = description
+    if imageUrl:
+        embed.set_image(url=imageUrl)
+    elif imageFile:
+        embed.set_image(url=f"attachment://{imageFile.filename}")
+    if ctx:
+      embed.set_footer(text=f"/{ctx.command} | Requested by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.display_avatar.url)
     return embed
-    
