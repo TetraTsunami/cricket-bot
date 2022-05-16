@@ -1,14 +1,17 @@
+import logging
 import os
 import random
-import requests
 
 import discord
-from discord.commands import slash_command, Option
+import requests
+from discord.commands import Option, slash_command
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from .utils.embed import simple_embed
 from .utils.deepmoji import get_emoji
+from .utils.embed import simple_embed
+
+logger = logging.getLogger('discord')
 
 load_dotenv()
 if os.getenv('DEEPMOJI_URL'):
@@ -48,10 +51,10 @@ class Deepmoji(commands.Cog):
             page = [f'*{sentence}*']
             for i in emoji:
                 page.append(f'{i["emoji"]}: **{round(i["prob"]*100)}%**')
-            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="😀", status='\n'.join(page)), ephemeral=hidden)
+            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="😀", body='\n'.join(page), ctx=ctx), ephemeral=hidden)
                 
         except requests.exceptions.HTTPError as e:
-            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="Failure", status=f'Deepmoji error "{e}" on message "{ctx.message.content}"'), ephemeral=True)
+            await ctx.respond(embed=simple_embed(title="Deepmoji results",icon="Failure", body=f'Deepmoji error "{e}" on message "{ctx.message.content}"', ctx=ctx), ephemeral=True)
         
         
     @commands.Cog.listener()
@@ -60,11 +63,10 @@ class Deepmoji(commands.Cog):
                 # 30% chance to trigger, but we have a high prob setting so it may not go off all that often
                     try:
                         emoji = get_emoji(message.content, deepmoji_url, 0.20)
-                        # print(f'got {emoji} for "{message.content}"')
                         if emoji:
                             await message.add_reaction(emoji[0]['emoji'])
                     except requests.exceptions.HTTPError as e:
-                        print(f'Deepmoji error "{e}" on message "{message.content}"')
+                        logger.warning(f'Deepmoji error "{e}" on message "{message.content}"')
                         
 
 def setup(bot):
