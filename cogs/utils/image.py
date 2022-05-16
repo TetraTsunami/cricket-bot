@@ -103,11 +103,12 @@ def wrap_text(text: str, width: int, font: ImageFont, break_words: bool = False)
     lines = []
     height = 0
     line = ""
+    lineheight = font.getsize("bdfghijklpqty")[1]-11
     if break_words:
         for letter in list(text):
             if font.getsize(line + letter)[0] > width:
                 lines.append(line)
-                height += font.getsize(line)[1]
+                height += lineheight
                 line = letter
             else:
                 line += letter
@@ -115,7 +116,7 @@ def wrap_text(text: str, width: int, font: ImageFont, break_words: bool = False)
         for word in text.split():
             if font.getsize(line + word + " ")[0] > width:
                 lines.append(line)
-                height += font.getsize(line)[1]
+                height += lineheight
                 line = word + " "
             else:
                 line += word + " "
@@ -203,13 +204,13 @@ def draw_text_to_image(TextBox, text, inputPath="./image_gen/image_gen.png", out
     if (TextBox.angle == 0) and (TextBox.skew == 0):
         # If the text is not skewed or rotated, we can use the built-in function
         draw.multiline_text(TextBox.pos, textWrapped,
-                            font=font, fill=TextBox.text_color)
+                            font=font, fill=TextBox.text_color, spacing=-4)
     else:
         # If the text is rotated or skewed, we need to make a new image, draw the text on it, and then rotate/skew *that*
         img_txt = Image.new("RGBA", TextBox.dimensions, (0, 0, 0, 0))
         draw_txt = ImageDraw.Draw(img_txt)
         draw_txt.multiline_text((0, 0), textWrapped,
-                                font=font, fill=TextBox.text_color)
+                                font=font, fill=TextBox.text_color, spacing=-4)
         img_txt = img_txt.rotate(
             TextBox.angle, expand=1, resample=Image.Resampling.BICUBIC)
 
@@ -232,6 +233,8 @@ def draw_text_to_image(TextBox, text, inputPath="./image_gen/image_gen.png", out
             x = TextBox.pos[0] - (TextBox.dimensions[1] * math.cos(angle))
             y = TextBox.pos[1]
 
+        if img.mode != "RGBA":
+            img = img.convert("RGBA")
         img.alpha_composite(img_txt, (math.floor(x), math.floor(y)))
     img.save(outputPath)
 
@@ -252,6 +255,23 @@ def compress_image(width, height="-1", inputPath="./image_gen/image_gen.png", ou
     img = img.quantize(method=2)  # Convert to 8-bit color
     img = img.resize((width, height), Image.ANTIALIAS)
     img.save(outputPath, "PNG")
+
+
+def image_overlay(inputPath: str = "./image_gen/image_gen.png", outputPath: str = "./image_gen/image_gen.png", overlayPath: str = "./image_gen/image_gen.png", position: tuple = (0, 0)):
+    """Overlays an image on top of another image with transparency.
+
+    Args:
+        inputPath (str): Path to the image to overlay. Defaults to "./image_gen/image_gen.png".
+        outputPath (str): Path to save the image to. Defaults to "./image_gen/image_gen.png".
+        overlayPath (str): Path to the image to overlay on top of the original image. Defaults to "./image_gen/image_gen.png".
+        position (tuple): The position to draw the overlay at. Defaults to (0, 0).
+    """
+    img = Image.open(inputPath)
+    overlay = Image.open(overlayPath)
+    if img.mode != "RGBA":
+        img = img.convert("RGBA")
+    img.alpha_composite(overlay, (position))
+    img.save(outputPath)
 
 # img = Image.open("./test.png")
 
