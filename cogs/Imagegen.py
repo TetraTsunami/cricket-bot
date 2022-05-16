@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 from .utils.embed import simple_embed
 from .utils.image import (TextBox, compress_image, draw_text_to_image,
-                          text_to_png, transparency)
+                          image_overlay, text_to_png, transparency)
 from .utils.imgflip import Imgflip
 
 logger = logging.getLogger('discord')
@@ -64,9 +64,15 @@ class Image_gen(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    memegen = SlashCommandGroup("memegen", "Generate memes")
+    imagegen = SlashCommandGroup("generator", "Generate images")
 
-    @memegen.command(description="Turns your text into Minecraft text")
+    signs = imagegen.create_subgroup(
+        "signs", "Various characters holding signs")
+
+    imgflip_slash = imagegen.create_subgroup(
+        "imgflip", "Access the ImgFlip API")
+
+    @imagegen.command(description="Turns your text into Minecraft text")
     async def minecraft(self, ctx, text: Option(str, description="What you'd like to say", required=True)):
         if len(text) <= 100:
             try:
@@ -83,7 +89,7 @@ class Image_gen(commands.Cog):
         else:
             await ctx.respond(embed=simple_embed("Minecraft", "Minecraft", "Length", ctx=ctx), ephemeral=True)
 
-    @memegen.command(description="Create a Sonic Says meme")
+    @imagegen.command(description="Create a Sonic Says meme")
     async def sonicsays(self, ctx, text: Option(str, description="What you'd like Sonic to say", required=True)):
         if len(text) <= 500:
             try:
@@ -101,6 +107,32 @@ class Image_gen(commands.Cog):
         else:
             await ctx.respond(embed=simple_embed("Failure", "Sonicsays", "Length", ctx=ctx), ephemeral=True)
 
+    @signs.command(description="An Inkling holding a sign")
+    async def inkling(self, ctx, text: Option(str, description="What you'd like the sign to say", required=True)):
+        if len(text) <= 500:
+            try:
+                await ctx.defer()
+#                 draw_text_to_image(TextBox(pos=(756, 398), dimensions=(384, 566), font="./image_gen/PatrickHand-Regular.ttf", fontsize=100,
+#                                            minFontsize=25, text_color=(0, 0, 0), angle=-10.5), "Number 15: Burger king foot lettuce. The last thing you'd want in your Burger King burger is someone's foot fungus. But as it turns out, that might be what you get. A 4channer uploaded a photo anonymously to the site showcasing his feet in a plastic bin of lettuce. With the statement: This is the lettuce you eat at Burger King. Admittedly, he had shoes on.  But that's even worse.  The post went live at 11:38 PM on July 16, and a mere 20 minutes later, the Burger King in question was alerted to the rogue employee. At least, I hope he's rogue. How did it happen? Well, the BK employee hadn't removed the Exif data from the uploaded photo, which suggested the culprit was somewhere in Mayfield Heights, Ohio. This was at 11:47. Three minutes later at 11:50, the Burger King branch address was posted with wishes of happy unemployment. 5 minutes later, the news station was contacted by another 4channer. And three minutes later, at 11:58, a link was posted: BK's Tell us about us online forum. The foot photo, otherwise known as exhibit A, was attached. Cleveland Scene Magazine contacted the BK in question the next day. When questioned, the breakfast shift manager said Oh, I know who that is . He's getting fired. Mystery solved, by 4chan. Now we can all go back to eating our fast food in peace.", "./image_gen/inkling_sign_template.png", "./image_gen/image_gen.png")
+
+
+# image_overlay(inputPath="./image_gen/image_gen.png", outputPath="./image_gen/image_gen.png",
+#               overlayPath="./image_gen/inkling_sign_template_overlay.png", position=(639, 656))
+                draw_text_to_image(TextBox(pos=(756, 398), dimensions=(384, 566), font="./image_gen/PatrickHand-Regular.ttf", fontsize=100,
+                                           minFontsize=25, text_color=(0, 0, 0), angle=-10.5), text, "./image_gen/inkling_sign_template.png", "./image_gen/image_gen.png")
+                image_overlay(overlayPath="./image_gen/inkling_sign_template_overlay.png",
+                              position=(639, 656))
+                compress_image(700)
+                file = discord.File(
+                    fp="./image_gen/image_gen.png", filename=f"sonicsays_{ctx.author.name}.png")
+                await ctx.respond(embed=simple_embed("Sign - Inkling", body="Original art by: [@tsitraami](https://twitter.com/tsitraami/status/1425084920410611713?s=20&t=tHC3KIDH2ZjPvoTrouWgDg)", imageFile=file, ctx=ctx), file=file)
+            except Exception as e:
+                logger.debug(
+                    f"Error in /memegen sonicsays (invoked by {ctx.author.name}): {e}")
+                await ctx.respond(embed=simple_embed("Failure", "Sign - Inkling", "idk", ctx=ctx), ephemeral=True)
+        else:
+            await ctx.respond(embed=simple_embed("Failure", "Sign - Inkling", "Length", ctx=ctx), ephemeral=True)
+
     async def text_box_helper(ctx: discord.AutocompleteContext):
         try:
             if name_to_boxes(ctx.options['meme']) >= int(re.sub('^box', '', ctx.focused.name)) and not ctx.value == '':
@@ -112,7 +144,7 @@ class Image_gen(commands.Cog):
         except ValueError:
             return [f'{ctx.options["meme"]} is not a valid meme.']
 
-    @memegen.command(description="Generates a meme using the imgflip API")
+    @imgflip_slash.command(description="Generates a meme using the imgflip API")
     async def generate(
         self,
         ctx: discord.ApplicationContext,
@@ -140,7 +172,7 @@ class Image_gen(commands.Cog):
         except Exception as e:
             await ctx.respond(embed=simple_embed('ImgFlip API', 'Failure', f'{e.__class__.__name__}: {e}', ctx=ctx))
 
-    @memegen.command(description="Lists meme formats in the imgflip API")
+    @imgflip_slash.command(description="Lists meme formats in the imgflip API")
     async def list(self, ctx):
         paginator = pages.Paginator(
             pages=imgflip['paginator_list'], show_disabled=True, show_indicator=True)
