@@ -1,3 +1,4 @@
+import asyncio
 import random
 import re
 import time
@@ -8,6 +9,7 @@ from PIL import Image
 
 from .utils.cooldown import cooldown
 from .utils.image import text_to_png, transparency
+
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -40,16 +42,14 @@ class Fun(commands.Cog):
         if re.search('(?i)\suwu', message.content):
             if random.choice([0, 0, 0, 1]):
                 await message.channel.send('https://media.discordapp.net/attachments/716303341822672999/768908033609695234/dontdoituwu.png')
-                time.sleep(0.5)
+                await asyncio.sleep(0.5)
                 await message.channel.send('yes, that\'s a threat')
 
         if re.search('(?i)(^d.?e.*d.?chat.*|^chat d.?e.*d.*|^d.e.a?.?d..?c.h.a.t.*)', message.content):
-            if (message.guild):
-                if message.channel.id == 541089040200368129:
-                    # don't react to :deadchat: in #deadchat 
-                    return
+            if message.guild and (message.channel.id != 541089040200368129):
+                # don't react to :deadchat: in #deadchat 
                 await message.channel.send('https://cdn.discordapp.com/attachments/534782089846063124/879143198197448764/objection-716514-2.mp4')
-                time.sleep(0.5)
+                await asyncio.sleep(0.5)
                 await message.channel.send(f'knock it off, {message.author.mention}')
 
         #Wah generator w/ Discord profile pics
