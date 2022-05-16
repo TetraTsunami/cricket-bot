@@ -75,7 +75,7 @@ class Image_gen(commands.Cog):
             
     @memegen.command(description="Create a Sonic Says meme")
     async def sonicsays(self, ctx, text: Option(str, description="What you'd like Sonic to say", required=True)):
-        if len(text) <= 200:
+        if len(text) <= 500:
             try:
                 # copy template to image_gen file
                 draw_text_to_image(TextBox((44,112),(670, 445), "./image_gen/Montserrat-ExtraBold.ttf", 90, (255,255,255)), text, "./image_gen/sonic_says_template.png", "./image_gen/image_gen.png")

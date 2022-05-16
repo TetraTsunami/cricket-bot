@@ -115,14 +115,14 @@ def wrap_text(text, width, font: ImageFont):
     line = ""
 
     for word in text.split():
-        if font.getsize(line + word)[0] > width:
+        if font.getsize(line + word + " ")[0] > width:
             lines.append(line)
             height += font.getsize(line)[1]
             line = word + " "
         else:
             line += word + " "
-    if font.getsize(line + word)[0] > width:
-        raise ValueError("Text is too long to fit in the given width.")        
+    if font.getsize(line)[0] > width:
+        raise ValueError("Text is too long to fit in the given width without overflowing")        
     lines.append(line)
     height += font.getsize(line)[1]
     return lines, height
@@ -161,7 +161,9 @@ def resize_and_wrap_text(text, box: TextBox):
     else:
         # Otherwise, we can fit it without any shenanigans. Yay!
         return lines, font.size
-      
+
+print(resize_and_wrap_text("The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The", TextBox((44,112),(670, 445), "./image_gen/Montserrat-ExtraBold.ttf", 90, (255,255,255))))
+
 # function copy-pasted from https://stackoverflow.com/a/14178717/744230
 def find_coeffs(source_coords, target_coords):
     matrix = []
