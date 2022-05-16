@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 
@@ -7,8 +8,11 @@ from discord.ext import commands, pages
 from dotenv import load_dotenv
 
 from .utils.embed import simple_embed
-from .utils.image import text_to_png, transparency
+from .utils.image import (TextBox, compress_image, draw_text_to_image,
+                          text_to_png, transparency)
 from .utils.imgflip import Imgflip
+
+logger = logging.getLogger('discord')
 
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
@@ -64,9 +68,25 @@ class Image_gen(commands.Cog):
                 file = discord.File(fp="./image_gen/transparent_image_gen.png", filename=f"{ctx.author.name}_say.png")
                 await ctx.respond(file=file)
             except:
-                await ctx.respond(embed=simple_embed("Minecraft","Minecraft","idk"), ephemeral=True)
+                logger.debug(f"Error in /memegen minecraft (invoked by {ctx.author.name}): {e}")
+                await ctx.respond(embed=simple_embed("Minecraft","Minecraft","idk", ctx=ctx), ephemeral=True)
         else:
-            await ctx.respond(embed=simple_embed("Minecraft","Minecraft","Length"), ephemeral=True)
+            await ctx.respond(embed=simple_embed("Minecraft","Minecraft","Length", ctx=ctx), ephemeral=True)
+            
+    @memegen.command(description="Create a Sonic Says meme")
+    async def sonicsays(self, ctx, text: Option(str, description="What you'd like Sonic to say", required=True)):
+        if len(text) <= 200:
+            try:
+                # copy template to image_gen file
+                draw_text_to_image(TextBox((44,112),(670, 445), "./image_gen/Montserrat-ExtraBold.ttf", 90, (255,255,255)), text, "./image_gen/sonic_says_template.png", "./image_gen/image_gen.png")
+                compress_image(700)
+                file = discord.File(fp="./image_gen/image_gen.png", filename=f"sonicsays_{ctx.author.name}.png")
+                await ctx.respond(embed=simple_embed("Sonic Says",imageFile=file, ctx=ctx), file=file)
+            except Exception as e:
+                logger.debug(f"Error in /memegen sonicsays (invoked by {ctx.author.name}): {e}")
+                await ctx.respond(embed=simple_embed("Failure","Sonicsays","idk", ctx=ctx), ephemeral=True)
+        else:
+            await ctx.respond(embed=simple_embed("Failure","Sonicsays","Length", ctx=ctx), ephemeral=True)
         
     async def text_box_helper(ctx: discord.AutocompleteContext):
         try:
@@ -96,11 +116,9 @@ class Image_gen(commands.Cog):
         try:
             image = api.caption_image(meme=name_to_id(meme),boxes=box_list)
             meme_url = image['url']
-            embed=discord.Embed(color=0xc84268)
-            embed.set_image(url=meme_url)
-            await ctx.respond(embed=embed)
+            await ctx.respond(embed=simple_embed(title="ImgFlip API",imageUrl=meme_url, ctx=ctx))
         except Exception as e:
-            await ctx.respond(embed=simple_embed('ImgFlip API','Failure',f'{e.__class__.__name__}: {e}'))
+            await ctx.respond(embed=simple_embed('ImgFlip API','Failure',f'{e.__class__.__name__}: {e}', ctx=ctx))
         
     @memegen.command(description="Lists meme formats in the imgflip API")
     async def list(self,ctx):
