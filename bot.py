@@ -1,16 +1,21 @@
-import os
-from dotenv import load_dotenv
-from cogs.utils.embed import simple_embed
-import logging
-import discord
-from discord.ext import commands
-from discord.commands import Option, SlashCommandGroup, CommandPermission
-import sys
 import json
 import logging
+import os
+import sys
 
-logging.basicConfig(level=logging.INFO)
-print("~~~~ Cricket! ~~~~")
+import discord
+from discord.commands import Option, SlashCommandGroup
+from discord.ext import commands
+from dotenv import load_dotenv
+
+from cogs.utils.embed import simple_embed
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 SUPPORT_GUILD = int(os.getenv('SUPPORT_GUILD'))
@@ -19,9 +24,13 @@ if os.getenv('DEBUG_GUILD'): DEBUG = int(os.getenv('DEBUG_GUILD'))
 cogs_dir = "cogs"
 activity = discord.Activity(type=discord.ActivityType.listening, name="crickets, chirp!")
 
-if os.getenv('DEBUG_GUILD'): bot = commands.Bot(command_prefix="c!", activity=activity, debug_guilds=[DEBUG])
-else: bot = commands.Bot(command_prefix="c!", activity=activity)
-intents = discord.Intents(messages=True, guild_messages=True, guilds=True)
+intents = discord.Intents().default()
+intents.messages = True
+intents.guilds = True
+intents.guild_messages = True
+
+if os.getenv('DEBUG_GUILD'): bot = commands.Bot(command_prefix="c!", activity=activity, debug_guilds=[DEBUG], intents=intents)
+else: bot = commands.Bot(command_prefix="c!", activity=activity, intents=intents)
 discord.http.API_VERSION = 9
 
 
@@ -31,7 +40,6 @@ async def on_ready():
     if os.getenv('DEBUG_GUILD'):
         debug_guild = await bot.fetch_guild(DEBUG)
         print(f"✓ Debug guild is {debug_guild.name} ({DEBUG})")
-    print("~~~~~ <コ:彡 ~~~~~")
 
 def list_cogs():
     return [extension for extension in [f.replace('.py', '') for f in os.listdir(cogs_dir) if os.path.isfile(os.path.join(cogs_dir, f))]]
@@ -59,14 +67,10 @@ async def ping(ctx):
 module = SlashCommandGroup(
     "module",
     "Manage backend modules",
-    permissions=[
-        CommandPermission(
-            "owner", 2, True
-        )
-    ]
 )
 
 @module.command(description="Load a backend module", guild_ids=[SUPPORT_GUILD])
+@discord.ext.commands.is_owner()
 async def load(ctx, module: Option(str, "Name of the cog to load", autocomplete=discord.utils.basic_autocomplete(list_cogs()))):
     try:
         bot.load_extension(cogs_dir + "." + module)
@@ -80,6 +84,7 @@ async def load(ctx, module: Option(str, "Name of the cog to load", autocomplete=
         print(f"✓ {module} loaded by {ctx.author}")
 
 @module.command(description="Unload a backend module", guild_ids=[SUPPORT_GUILD])
+@discord.ext.commands.is_owner()
 async def unload(ctx, module: Option(str, "Name of the cog to unload", autocomplete=discord.utils.basic_autocomplete(list_cogs()))):
     try:
         bot.unload_extension(cogs_dir + "." + module)
@@ -92,6 +97,7 @@ async def unload(ctx, module: Option(str, "Name of the cog to unload", autocompl
         print(f"✓ {module} unloaded by {ctx.author}")
         
 @module.command(description="Reload a backend module", guild_ids=[SUPPORT_GUILD])
+@discord.ext.commands.is_owner()
 async def reload(ctx, module: Option(str, "Name of the cog to reload", autocomplete=discord.utils.basic_autocomplete(list_cogs()))):
     try:
         bot.reload_extension(cogs_dir + "." + module) 
@@ -104,6 +110,5 @@ async def reload(ctx, module: Option(str, "Name of the cog to reload", autocompl
     else:
         await ctx.respond(embed=simple_embed("Reload",'Success',f"{module} reloaded"), ephemeral = True)
         print(f"✓ {module} reloaded by {ctx.author}")
-
-logging.basicConfig(level=logging.WARNING)
+        
 bot.run(TOKEN)
