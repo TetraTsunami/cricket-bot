@@ -102,22 +102,34 @@ class Image_gen(commands.Cog):
                 await ctx.respond(embed=simple_embed("Sonic Says", imageFile=file, ctx=ctx), file=file)
             except Exception as e:
                 logger.debug(
-                    f"Error in /memegen sonicsays (invoked by {ctx.author.name}): {e}")
+                    f"Error in /generate sonicsays (invoked by {ctx.author.name}): {e}")
                 await ctx.respond(embed=simple_embed("Failure", "Sonicsays", "idk", ctx=ctx), ephemeral=True)
         else:
             await ctx.respond(embed=simple_embed("Failure", "Sonicsays", "Length", ctx=ctx), ephemeral=True)
+            
+    @imagegen.command(description="Create a Shadow Says meme")
+    async def shadowsays(self, ctx, text: Option(str, description="What you'd like Shadow to say", required=True)):
+        if len(text) <= 500:
+            try:
+                await ctx.defer()
+                draw_text_to_image(TextBox(pos=(44, 112), dimensions=(670, 445), font="./image_gen/Montserrat-ExtraBold.ttf", fontsize=90,
+                                   minFontsize=25, text_color=(255, 255, 255)), text, "./image_gen/shadow_says_template.png", "./image_gen/image_gen.png")
+                compress_image(700)
+                file = discord.File(
+                    fp="./image_gen/image_gen.png", filename=f"sonicsays_{ctx.author.name}.png")
+                await ctx.respond(embed=simple_embed("Shadow Says", imageFile=file, ctx=ctx), file=file)
+            except Exception as e:
+                logger.debug(
+                    f"Error in /generate shadowsays (invoked by {ctx.author.name}): {e}")
+                await ctx.respond(embed=simple_embed("Failure", "Shadowsays", "idk", ctx=ctx), ephemeral=True)
+        else:
+            await ctx.respond(embed=simple_embed("Failure", "Shadowsays", "Length", ctx=ctx), ephemeral=True)
 
     @signs.command(description="An Inkling holding a sign")
     async def inkling(self, ctx, text: Option(str, description="What you'd like the sign to say", required=True)):
         if len(text) <= 500:
             try:
                 await ctx.defer()
-#                 draw_text_to_image(TextBox(pos=(756, 398), dimensions=(384, 566), font="./image_gen/PatrickHand-Regular.ttf", fontsize=100,
-#                                            minFontsize=25, text_color=(0, 0, 0), angle=-10.5), "Number 15: Burger king foot lettuce. The last thing you'd want in your Burger King burger is someone's foot fungus. But as it turns out, that might be what you get. A 4channer uploaded a photo anonymously to the site showcasing his feet in a plastic bin of lettuce. With the statement: This is the lettuce you eat at Burger King. Admittedly, he had shoes on.  But that's even worse.  The post went live at 11:38 PM on July 16, and a mere 20 minutes later, the Burger King in question was alerted to the rogue employee. At least, I hope he's rogue. How did it happen? Well, the BK employee hadn't removed the Exif data from the uploaded photo, which suggested the culprit was somewhere in Mayfield Heights, Ohio. This was at 11:47. Three minutes later at 11:50, the Burger King branch address was posted with wishes of happy unemployment. 5 minutes later, the news station was contacted by another 4channer. And three minutes later, at 11:58, a link was posted: BK's Tell us about us online forum. The foot photo, otherwise known as exhibit A, was attached. Cleveland Scene Magazine contacted the BK in question the next day. When questioned, the breakfast shift manager said Oh, I know who that is . He's getting fired. Mystery solved, by 4chan. Now we can all go back to eating our fast food in peace.", "./image_gen/inkling_sign_template.png", "./image_gen/image_gen.png")
-
-
-# image_overlay(inputPath="./image_gen/image_gen.png", outputPath="./image_gen/image_gen.png",
-#               overlayPath="./image_gen/inkling_sign_template_overlay.png", position=(639, 656))
                 draw_text_to_image(TextBox(pos=(756, 398), dimensions=(384, 566), font="./image_gen/PatrickHand-Regular.ttf", fontsize=100,
                                            minFontsize=25, text_color=(0, 0, 0), angle=-10.5), text, "./image_gen/inkling_sign_template.png", "./image_gen/image_gen.png")
                 image_overlay(overlayPath="./image_gen/inkling_sign_template_overlay.png",
@@ -128,7 +140,7 @@ class Image_gen(commands.Cog):
                 await ctx.respond(embed=simple_embed("Sign - Inkling", body="Original art by: [@tsitraami](https://twitter.com/tsitraami/status/1425084920410611713?s=20&t=tHC3KIDH2ZjPvoTrouWgDg)", imageFile=file, ctx=ctx), file=file)
             except Exception as e:
                 logger.debug(
-                    f"Error in /memegen sonicsays (invoked by {ctx.author.name}): {e}")
+                    f"Error in /generate signs inkling (invoked by {ctx.author.name}): {e}")
                 await ctx.respond(embed=simple_embed("Failure", "Sign - Inkling", "idk", ctx=ctx), ephemeral=True)
         else:
             await ctx.respond(embed=simple_embed("Failure", "Sign - Inkling", "Length", ctx=ctx), ephemeral=True)
