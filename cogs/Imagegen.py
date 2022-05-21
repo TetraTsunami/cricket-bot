@@ -124,6 +124,24 @@ class Image_gen(commands.Cog):
                 await ctx.respond(embed=simple_embed("Failure", "Shadowsays", "idk", ctx=ctx), ephemeral=True)
         else:
             await ctx.respond(embed=simple_embed("Failure", "Shadowsays", "Length", ctx=ctx), ephemeral=True)
+            
+    @imagegen.command(description="Create a Eggman Says meme")
+    async def eggmansays(self, ctx, text: Option(str, description="What you'd like Eggman to say", required=True)):
+        if len(text) <= 500:
+            try:
+                await ctx.defer()
+                draw_text_to_image(TextBox(pos=(44, 112), dimensions=(670, 445), font="./image_gen/Montserrat-ExtraBold.ttf", fontsize=90,
+                                   minFontsize=25, text_color=(255, 255, 255)), text, "./image_gen/eggman_says_template.png", "./image_gen/image_gen.png")
+                compress_image(700)
+                file = discord.File(
+                    fp="./image_gen/image_gen.png", filename=f"sonicsays_{ctx.author.name}.png")
+                await ctx.respond(embed=simple_embed("Eggman Says", imageFile=file, ctx=ctx), file=file)
+            except Exception as e:
+                logger.debug(
+                    f"Error in /generate eggmansays (invoked by {ctx.author.name}): {e}")
+                await ctx.respond(embed=simple_embed("Failure", "Eggmansays", "idk", ctx=ctx), ephemeral=True)
+        else:
+            await ctx.respond(embed=simple_embed("Failure", "Eggmansays", "Length", ctx=ctx), ephemeral=True)
 
     @signs.command(description="An Inkling holding a sign")
     async def inkling(self, ctx, text: Option(str, description="What you'd like the sign to say", required=True)):
