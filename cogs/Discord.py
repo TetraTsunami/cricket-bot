@@ -38,49 +38,6 @@ class Discord(commands.Cog):
             pass
         await ctx.respond(embed=embed,ephemeral=hidden)
     
-    
-    @discord_utils.command(description="Starts an activity in your current voice channel")
-    async def activity(
-        self,
-        ctx,
-        activity: Option(str, 'Activity (defaults to YouTube)', choices=['Betrayal.io', 'Chess In The Park', 'YouTube Together'], Required=False) = 'YouTube Together', 
-        hidden: Option(bool, 'Show results in an ephemeral message', Required=False) = False
-                   ):
-        ACTIVITY_IDS = {
-            'Betrayal.io':773336526917861400, 
-            'Chess In The Park':832012774040141894,
-            'YouTube Together':755600276941176913
-        }
-        activity_id = ACTIVITY_IDS[activity]
-        if not ctx.author.voice.channel:
-            return await ctx.respond('get in a voice channel, then we can talk', hidden=True)
-        try:
-            target = ctx.author.voice.channel
-            r = requests.post(f"https://discord.com/api/v8/channels/{target.id}/invites", json = {
-                    "max_age": 600,
-                    "max_uses": 2,
-                    "target_application_id": activity_id,
-                    "target_type": 2,
-                    "temporary": False}, headers = {"Authorization": f"Bot {TOKEN}", "Content-Type": "application/json"})
-            invite = r.json()
-            if r.status_code != 200:
-                if activity_id == "755600276941176913": 
-                    embed=simple_embed('YouTube Activity', 'YouTube','Permissions')
-                else:
-                    embed=simple_embed('Discord Activity', 'Discord','Permissions')
-                return await ctx.respond(embed=embed,ephemeral=True)
-            if activity == "755600276941176913": 
-                embed=simple_embed('YouTube Activity', 'YouTube', f"[Start a YouTube session in {ctx.author.voice.channel}](https://discord.gg/{r.json()['code']})")
-            else:
-                embed=simple_embed('Discord Activity', 'Discord',f"[Start an Activity session in {ctx.author.voice.channel}](https://discord.gg/{r.json()['code']})")
-            await ctx.respond(embed=embed,ephemeral=hidden)
-        except:
-            if activity_id == "755600276941176913": 
-                embed=simple_embed('YouTube Activity', 'YouTube','idk')
-            else:
-                embed=simple_embed('Discord Activity', 'Discord','idk')
-            await ctx.respond(embed=embed,ephemeral=True)
-    
     @discord_utils.command(description="Returns info about a custom emoji")
     async def emote(self, ctx, emoji: Option(str, 'The emoji you\'d like to download')):
         if not re.search('^<.?:.*:.*>$', emoji):
