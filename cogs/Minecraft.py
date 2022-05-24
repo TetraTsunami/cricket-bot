@@ -75,7 +75,6 @@ async def ping_server(server: str, plugins: bool, ctx: discord.ApplicationContex
 
     
     if query:
-        logger.info(query.software.plugins)
         if query.software.plugins:
             embed.add_field(name="Plugins", value='\n'.join(query.software.plugins))
 
