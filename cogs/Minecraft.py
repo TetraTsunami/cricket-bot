@@ -1,19 +1,19 @@
+import asyncio
 import base64
+import datetime
 import io
 import json
 import re
-import datetime
-import sys
-import asyncio
 
 import discord
 import requests
 from discord.commands import Option, SlashCommandGroup, slash_command
 from discord.ext import commands
-from mcstatus import MinecraftServer
 from discord.ext.commands.context import Context
+from mcstatus import JavaServer
 
-from .utils.embed import simple_embed
+from .utils.embed import LinkButton, simple_embed
+
 
 def get_username_history(uuid: int) -> list:
     res = requests.get(f'https://api.mojang.com/user/profiles/{uuid}/names')
@@ -32,29 +32,32 @@ def get_textures(uuid: int) -> list:
     res.raise_for_status()
     return json.loads(base64.b64decode(json.loads(res.content)['properties'][0]['value']))
 
-async def ping_server(server: str, plugins: bool) -> discord.Embed:
-    target = MinecraftServer.lookup(server)
+async def ping_server(server: str, plugins: bool, ctx: discord.ApplicationContext = None) -> discord.Embed:
+    target = await JavaServer.async_lookup(address=server)
     
+    
+    # Query the server if we're searching for plugins
     status_async = asyncio.create_task(target.async_status())
-    if plugins:
-        try:
-            query_async = asyncio.create_task(target.async_query(tries=1))
-        except BaseException:
-            pass
-    #Build embed
+    query_async = asyncio.create_task(target.async_query(tries=1)) if plugins else None
+    
+    # Wait for the tasks to finish
     status = await status_async
-    embed = discord.Embed(title=f'{server}', description=f'Updated {discord.utils.format_dt(datetime.datetime.now(), "R")}',color=0xc84268)
+    query = await query_async if plugins else None
+    
+    # Build embed
+    embed = simple_embed(title=f'{server}', icon="Minecraft", body=f'Updated {discord.utils.format_dt(datetime.datetime.now(), "R")}', ctx=ctx)
     embed.add_field(name="Version", value=status.version.name)
     embed.add_field(
         name="Players", value=f"{status.players.online}/{status.players.max}")
     embed.add_field(name="Ping", value=f"{round(status.latency)} ms")
-    try:
-        description = re.sub(r'^\s+|§.', '', status.description)
-        description = re.sub(r'\n\s*', r'\n', description)
-        embed.add_field(name="Description",
-                        value=f"```{description}```", inline=False)
-    except:
-        pass
+    
+    # Remove special characters from the description, and format newlines
+    description = re.sub(r'^\s+|§.', '', status.description)
+    description = re.sub(r'\n\s*', r'\n', description)
+    embed.add_field(name="Description",
+                    value=f"```{description}```", inline=False)
+
+    # Let's try to get the server's icon
     try:
         data = base64.b64decode(
             status.favicon.split(',', 1)[-1])
@@ -62,23 +65,28 @@ async def ping_server(server: str, plugins: bool) -> discord.Embed:
         embed.set_thumbnail(url=f'attachment://{server}_icon.png')
     except:
         pass
-    try:
-        if plugins:
-            # If we're already querying, may as well use the improved player list
-            query = await query_async
-            embed.add_field(name="Online", value='\n'.join(query.players.names))
+    
+    # Hypixel, for instance, won't actually tell us their plugins/players even if we ask politely. They're sneaky like that, but Discord doesn't like an empty field.
+    if query and query.players.names:
+        # If we've already queried, may as well use the improved player list
+        embed.add_field(name="Online", value='\n'.join(query.players.names))
+    elif status.players.sample:
+        embed.add_field(name="Online", value='\n'.join(player.name for player in status.players.sample), inline=False)
+
+    
+    if query:
+        logger.info(query.software.plugins)
+        if query.software.plugins:
             embed.add_field(name="Plugins", value='\n'.join(query.software.plugins))
-        else:
-            embed.add_field(name="Online", value='\n'.join(player.name for player in status.players.sample), inline=False)
-    except:
-        pass
+
     return embed, file
             
-class Refresh(discord.ui.View):
-    def __init__(self):
+class MCRefreshButton(discord.ui.View):
+    def __init__(self, server, plugins: bool = False, ctx: discord.ApplicationContext = None):
         super().__init__(timeout=86400)
-        self.server = ""
-        self.plugins = False
+        self.server = server
+        self.ctx = ctx
+        self.plugins = plugins
 
     @discord.ui.button(
         style=discord.ButtonStyle.red, label="Refresh", custom_id="minecraft:refreshserver"
@@ -86,11 +94,8 @@ class Refresh(discord.ui.View):
     async def refresh(self, button: discord.ui.Button, interaction: discord.Interaction):
         try:
             await interaction.response.defer()
-            embed, file = await ping_server(self.server, self.plugins)
-            view = Refresh()
-            view.server = self.server
-            view.plugins = self.plugins
-            await interaction.message.edit(embed=embed, file=file, view=view)
+            embed, file = await ping_server(self.server, self.plugins, self.ctx)
+            await interaction.message.edit(embed=embed, file=file, view=self)
         except Exception as e:
             await interaction.message.edit(embed=simple_embed(self.server, 'Minecraft',f'{e.__class__.__name__}: {e}'))
         
@@ -111,11 +116,9 @@ class Minecraft(commands.Cog):
         ):
         try:
             await ctx.defer()
-            embed, file = await ping_server(server, plugins)
+            embed, file = await ping_server(server, plugins, ctx)
             if not hidden:
-                view = Refresh()
-                view.server = server
-                view.plugins = plugins
+                view = MCRefreshButton(server, plugins, ctx)
             else: view = None
             await ctx.respond(embed=embed, ephemeral=hidden, file=file, view=view)
         except Exception as e:
@@ -144,14 +147,13 @@ class Minecraft(commands.Cog):
         textures = get_textures(uuid)
         history = get_username_history(uuid)
         
+        view = LinkButton(ctx, buttons={"Skin Download": textures['textures']['SKIN']['url'], "NameMC": f"https://namemc.com/profile/{user}", "Hypixel": f"https://hypixel.net/player/{uuid}"}, timeout=None)
         # Build embed
-        embed = simple_embed(textures['profileName'],'Minecraft')
+        embed = simple_embed(textures['profileName'],'Minecraft', imageUrl=f'https://mc-heads.net/body/{uuid}', ctx=ctx)
         embed.add_field(name='UUID', value=textures['profileId'])
-        embed.add_field(name='Skin Download', value=f'[Click here to download textures]({textures["textures"]["SKIN"]["url"]})')
         embed.add_field(name="Username History", value='\n'.join(history), inline=False)
-        embed.set_image(url=f'https://mc-heads.net/body/{uuid}')
         embed.set_thumbnail(url=f'https://mc-heads.net/avatar/{uuid}')
-        await ctx.respond(embed=embed, ephemeral=hidden)
+        await ctx.respond(embed=embed, view=view, ephemeral=hidden)
 
         
 def setup(bot):

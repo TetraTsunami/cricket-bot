@@ -1,5 +1,5 @@
 # git+https://github.com/Pycord-Development/pycord@4d80dd5
-py-cord==2.0.0b7
+py-cord==2.0.0rc1
 python-dotenv==0.20.0
 mcstatus==9.0.4
 Pillow==9.1.0
