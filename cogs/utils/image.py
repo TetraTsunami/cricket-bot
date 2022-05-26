@@ -250,10 +250,10 @@ def compress_image(width, height="-1", inputPath="./image_gen/image_gen.png", ou
     """
     img = Image.open(inputPath)
     aspect_ratio = img.width / img.height
-    height = math.floor(width / aspect_ratio) if height == "-1" else height
-    img = img.convert("RGBA")
-    img = img.quantize(method=2)  # Convert to 8-bit color
+    if height <= 0:
+        height = math.floor(width / aspect_ratio)
     img = img.resize((width, height), Image.ANTIALIAS)
+    img = img.convert("P")
     img.save(outputPath, "PNG")
 
 
@@ -272,7 +272,7 @@ def image_overlay(inputPath: str = "./image_gen/image_gen.png", outputPath: str 
         img = img.convert("RGBA")
     img.alpha_composite(overlay, (position))
     img.save(outputPath)
-
+    
 # img = Image.open("./test.png")
 
 # coeffs = find_coeffs(
