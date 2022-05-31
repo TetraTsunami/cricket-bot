@@ -60,19 +60,19 @@ else:
     print('✗ No Imgflip login specified')
 
 
-class Image_gen(commands.Cog):
+class images(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    imagegen = SlashCommandGroup("generator", "Generate images")
+    image_generator = SlashCommandGroup("generator", "Generate images")
 
-    signs = imagegen.create_subgroup(
+    signs = image_generator.create_subgroup(
         "signs", "Various characters holding signs")
 
-    imgflip_slash = imagegen.create_subgroup(
+    imgflip_slash = image_generator.create_subgroup(
         "imgflip", "Access the ImgFlip API")
 
-    @imagegen.command(description="Turns your text into Minecraft text")
+    @image_generator.command(description="Turns your text into Minecraft text")
     async def minecraft(self, ctx, text: Option(str, description="What you'd like to say", required=True)):
         if len(text) <= 100:
             try:
@@ -89,7 +89,7 @@ class Image_gen(commands.Cog):
         else:
             await ctx.respond(embed=simple_embed("Minecraft", "Minecraft", "Length", ctx=ctx), ephemeral=True)
 
-    @imagegen.command(description="Create a Sonic Says meme")
+    @image_generator.command(description="Create a Sonic Says meme")
     async def sonicsays(self, ctx, text: Option(str, description="What you'd like Sonic to say", required=True)):
         if len(text) <= 500:
             try:
@@ -107,7 +107,7 @@ class Image_gen(commands.Cog):
         else:
             await ctx.respond(embed=simple_embed("Failure", "Sonicsays", "Length", ctx=ctx), ephemeral=True)
             
-    @imagegen.command(description="Create a Shadow Says meme")
+    @image_generator.command(description="Create a Shadow Says meme")
     async def shadowsays(self, ctx, text: Option(str, description="What you'd like Shadow to say", required=True)):
         if len(text) <= 500:
             try:
@@ -125,7 +125,7 @@ class Image_gen(commands.Cog):
         else:
             await ctx.respond(embed=simple_embed("Failure", "Shadowsays", "Length", ctx=ctx), ephemeral=True)
             
-    @imagegen.command(description="Create a Eggman Says meme")
+    @image_generator.command(description="Create a Eggman Says meme")
     async def eggmansays(self, ctx, text: Option(str, description="What you'd like Eggman to say", required=True)):
         if len(text) <= 500:
             try:
@@ -232,4 +232,4 @@ def name_to_id(name: str):
 
 
 def setup(bot):
-    bot.add_cog(Image_gen(bot))
+    bot.add_cog(images(bot))
