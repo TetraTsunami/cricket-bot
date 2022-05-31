@@ -11,7 +11,7 @@ from .utils.cooldown import cooldown
 from .utils.image import text_to_png, transparency
 
 
-class Fun(commands.Cog):
+class Autoresponder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -103,4 +103,4 @@ def obtain_text(file: str):
     return content
 
 def setup(bot):
-    bot.add_cog(Fun(bot))
+    bot.add_cog(Autoresponder(bot))
