@@ -5,12 +5,13 @@ import io
 import json
 import re
 
-import discord
 import requests
+from mcstatus import JavaServer
+
+import discord
 from discord.commands import Option, SlashCommandGroup, slash_command
 from discord.ext import commands
 from discord.ext.commands.context import Context
-from mcstatus import JavaServer
 
 from .utils.embed import LinkButton, simple_embed
 
