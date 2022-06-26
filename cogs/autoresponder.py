@@ -1,11 +1,11 @@
 import asyncio
 import random
 import re
-import time
+
+from PIL import Image
 
 import discord
 from discord.ext import commands
-from PIL import Image
 
 from .utils.cooldown import cooldown
 from .utils.image import text_to_png, transparency
@@ -34,6 +34,18 @@ class Autoresponder(commands.Cog):
         for i in SIMPLERESPONSE:
             if re.search(i[0], message.content) and cooldown(message.author.id, i[0], i[2]): await message.channel.send(i[1])
             
+        FILERESPONSE = [
+            ['1234', '1234', 30],
+            ['1235', '1235', 30],
+            ['1236', '1236', 30],
+            ['\!123^', '123', 30]
+        ]
+        for i in FILERESPONSE:
+            if re.search(i[0], message.content) and cooldown(message.author.id, i[0], i[2]):
+                await message.channel.send(random.choice(obtain_text(i[1])))
+        
+        
+         
         if re.search('(?i)<:deadchat:\d+>', message.content):
             if message.channel.id == 541089040200368129:
                 await message.add_reaction("<:deadchat:540541091863330816>")
