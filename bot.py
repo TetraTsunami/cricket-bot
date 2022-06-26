@@ -30,6 +30,7 @@ activity = discord.Activity(type=discord.ActivityType.listening, name="crickets,
 
 intents = discord.Intents().default()
 intents.messages = True
+intents.message_content = True
 intents.guilds = True
 intents.guild_messages = True
 
