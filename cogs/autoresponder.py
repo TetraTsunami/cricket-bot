@@ -40,11 +40,13 @@ class Autoresponder(commands.Cog):
             ['1236', '1236', 30],
             ['\!123^', '123', 30]
         ]
+        
         for i in FILERESPONSE:
             if re.search(i[0], message.content) and cooldown(message.author.id, i[0], i[2]):
                 await message.channel.send(random.choice(obtain_text(i[1])))
         
-        
+        if re.search('5321', message.content) and cooldown(message.author.id, '5321', 30):
+            await message.channel.send(random.choice(obtain_text('1235'))[::-1])
          
         if re.search('(?i)<:deadchat:\d+>', message.content):
             if message.channel.id == 541089040200368129:
