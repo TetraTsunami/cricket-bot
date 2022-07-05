@@ -16,17 +16,20 @@ def get_emoji(query: str, url: str, min_prob: int = 0.05, results: int = 5) -> l
     Raises:
         HTTPError: if the API cannot be reached or returns an invalid response.
     """
-    x = re.sub("[<>:'\"]|\d{5,}","",query)
-    data = {"sentences":[(x)]}
-    payload = str(data).replace("'","\"")
-    r = requests.post(url, data=payload.encode('utf-8'))
-    r.raise_for_status()
-    response = r.json()['emoji'][0]
-    def get_prob(e):
-        return e['prob']
-    response.sort(reverse=True, key=get_prob)
-    ret = []
-    for i in response[:results]:
-        if i['prob'] > min_prob: ret.append(i)
-        else: return ret
-    return ret
+    if query:
+        x = re.sub("[<>:'\"\?]|\d{5,}","",query)
+        data = {"sentences":[(x)]}
+        payload = str(data).replace("'","\"")
+        r = requests.post(url, data=payload.encode('utf-8'))
+        r.raise_for_status()
+        response = r.json()['emoji'][0]
+        def get_prob(e):
+            return e['prob']
+        response.sort(reverse=True, key=get_prob)
+        ret = []
+        for i in response[:results]:
+            if i['prob'] > min_prob: ret.append(i)
+            else: return ret
+        return ret
+    else:
+        return []
