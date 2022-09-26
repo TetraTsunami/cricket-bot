@@ -1,5 +1,6 @@
 import json
 import logging
+import traceback
 from datetime import datetime, timedelta
 
 import aiohttp
@@ -44,8 +45,8 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
 
                 e = (
                     discord.Embed(
-                        title="Cricket Command Error",
-                        description=f"```{error}```",
+                        title="Command Error",
+                        description=f"```{''.join(traceback.format_exception(type(error), error, error.__traceback__))}```",
                         color=0xFF0000,
                     )
                     .add_field(name="Command", value=f"/{ctx.command.qualified_name}")
@@ -63,6 +64,11 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
             exc_info=(type(error), error, error.__traceback__),
         )
 
+        logString = (
+            f", and the error has been logged."
+            if error_webhook_url
+            else "."
+        )
         inviteString = (
             f"or join my [support server]({support_invite}) in the meantime."
             if support_invite
@@ -71,9 +77,9 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
         await ctx.respond(
             embed=command_embed(
                 ctx,
-                title=ctx.command.name,
+                title=f"/{ctx.command.qualified_name}",
                 icon="❌",
-                body=f"Something went terribly wrong and the error has been logged. Try again in a little while, {inviteString} ```{error}```",
+                body=f"Something went terribly wrong while executing the command /{ctx.command.qualified_name}{logString} Try again in a little while, {inviteString} ```{error}```"
             ),
             ephemeral=True,
         )
