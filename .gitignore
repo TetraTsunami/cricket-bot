@@ -55,3 +55,4 @@ $RECYCLE.BIN/
 *__pycache__
 *image_gen.png
 /discord.log
+/configuration.json

@@ -1,0 +1,16 @@
+{
+	"token": "x",
+	"prefix": "x",
+	"activity": "crickets, chirp!",
+	"support_invite": "",
+	"owner_id": 1,
+	"debug_guild_id": 1,
+	"error_webhook_url": "https://discord.com/api/webhooks/x",
+	"icons": {
+		"minecraft": "x",
+		"discord": "x",
+		"success": "x",
+		"warning": "x",
+		"failure": "x"
+	}
+}
