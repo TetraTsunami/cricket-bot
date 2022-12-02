@@ -1,0 +1,90 @@
+{
+    "simple_response": {
+        "(?i)^I'm.+back.*": "hi back",
+        "(?i)^Hi back.*": "i'm the only one that gets to say that, clown",
+        "(?i)^Hi the only one.*": "...stop it",
+        "(?i)^hi\\s*literally\\s?right\\s?here\\s?w?o?w?.*": "...well, that's terribly rude of you.",
+        "(?i)^hey y?'?all,? scott here.?": "https://media.discordapp.net/attachments/377256114439585793/935748176038731906/Youre_not_Scott.png",
+        "(?i)cricket": [
+            "i'm literally right here wow",
+            "yep, that's me!",
+            "hi!!",
+            "wazzaap",
+            "👀",
+            "i'm not sure i agree, but okay?",
+            "your feedback has been noted. we'll ignore that."
+        ],
+        "(?i).*bread.*": "<:loaf_slice:960335609589796935>",
+        "(?i).*loaf.*": "<:loaf_end:960335609430442045>",
+        "(?i)^waku.?.?waku.?$": "hooray!",
+        "wah": [
+            "https://cdn.discordapp.com/attachments/668622610543935498/870716564779958352/paeewgo7i9u312.jpg",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179579044647002/waah.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179566738542652/waahh.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179530482987068/waaaaa.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179525512728626/waa.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179527131750400/waaa.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179524086673448/wa.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179522283114516/wahhhh.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179520253100093/wahhh.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/880179517681987594/wah.png",
+            "https://media.discordapp.net/attachments/683111565230342188/885962413457952768/image0.jpg",
+            "https://cdn.discordapp.com/attachments/716303341822672999/886000782997086249/w_a_a.png",
+            "https://media.discordapp.net/attachments/716303341822672999/886002244439380039/wa.webp",
+            "https://media.discordapp.net/attachments/534781603860316160/886044958547644466/unknown.png",
+            "https://media.discordapp.net/attachments/716303341822672999/886052239163129916/e07.png",
+            "https://media.discordapp.net/attachments/716303341822672999/886052462023299112/fxx8gwhs.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/886052535025160242/67c.png",
+            "https://cdn.discordapp.com/attachments/716303341822672999/886052735668084826/c2fy9ie1.png",
+            "https://cdn.discordapp.com/attachments/883874626848063531/923019291119464448/yah.jpg",
+            "https://cdn.discordapp.com/attachments/883874626848063531/923019291446640750/wahhhhhh.jpg",
+            "https://cdn.discordapp.com/attachments/883874626848063531/923019291891232768/wahoo.jpg",
+            "https://cdn.discordapp.com/attachments/883874626848063531/923019292096749568/waht.jpg",
+            "https://cdn.discordapp.com/attachments/883874626848063531/923019292293865482/wahwah.jpg"
+        ]
+    },
+    "prefix_response": {
+        "1234": [
+            "The lobby passcode is... wait, no. Try again with the right command",
+            "https://media.discordapp.net/attachments/716303341822672999/809451218330058792/Screen_Shot_2021-02-11_at_9.50.02_AM.png",
+            "The council has deemed you unworthy of the lobby passcode."
+        ],
+        "1235": [
+            "The lobby passcode has been within you this entire time...",
+            "The lobby passcode is a number greater than one thousand two hundred thirty-four and less than one thousand two hundred thirty-six.",
+            "The lobby passcode is very difficult to guess, don't bother trying.",
+            "The lobby passcode is 1235.",
+            "The lobby passcode is the command you just used. Betcha weren't expecting that dramatic reversal!",
+            "The lobby passcode could be one of 10,000 possible combinations. Shame you don't know it.",
+            "The lobby passcode is top secret, I don't even know it.",
+            "The lobby passcode is like 1234 but with a pinch more salt.",
+            "The lobby passcode was eaten (by me)!",
+            "The lobby passcode lost a duel and now it's in the Shadow Realm.",
+            "Nobody wrote down the lobby passcode, so we'll just have to suffer.",
+            "The lobby passcode is like 1233 but with several pinches of salt.",
+            "The lobby passcode is concealed within at least three layers of self-referential humor.",
+            "The lobby passcode is the cost for buying Among Us on PC 247 times.",
+            "The lobby passcode is the cost for buying the Sans costume in Smash Bros. Ultimate 1,646 times without tax and also with $0.50 left over.",
+            "The lobby passcode lost a duel and now it's straight-up dead. Ouch."
+        ],
+        "1236": [
+            "this is an affront against squidkind",
+            "*no*",
+            "Rethink your life choices, and try again.",
+            "You've gone too far.",
+            "You haven't gone far enough.",
+            "This is a little concerning at this point.",
+            "...ew, what?",
+            "Could you keep that to yourself, please?",
+            "The code is 1235, not 1234 or (cod forbid) 1236",
+            "Please... just leave me alone, I can't take this",
+            "https://media.discordapp.net/attachments/716303341822672999/839921092079386684/nxpisay0tks51.png?width=795&height=566",
+            "https://media.discordapp.net/attachments/716303341822672999/839921440320913438/utxwiznn7vs51.jpg "
+        ],
+        "123": [
+            "um",
+            "press another number *after* the 123 and you have a 10% chance of getting it right! good luck",
+            "so funny story, the password is four digits (probably)"
+        ]
+    }
+}

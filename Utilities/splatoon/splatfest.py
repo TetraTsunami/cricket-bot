@@ -6,8 +6,8 @@ import discord
 from discord.commands import slash_command
 from discord.ext import commands, tasks
 
-from cogs.utils.embed import command_embed
-from cogs.utils.splatoon3ink import get_next_splatfest
+from Utilities.format import command_embed
+from Utilities.splatoon import get_next_splatfest
 from cogs.utils.view import SplatfestRoleButton
 
 con = sqlite3.connect("data.db")

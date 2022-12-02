@@ -1,0 +1,1 @@
+from .splatoon3ink import *

@@ -7,31 +7,15 @@ import re
 
 import aiohttp
 import discord
-from cogs.utils.embed import *
+from Utilities.format import command_embed
 from mcstatus import JavaServer
+from Utilities.web import async_get
 
 embedIcon = "<:GrassBlock:924075881562009640>"
 
 
-async def async_get(url, headers=None):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url=url, headers=headers, raise_for_status=True) as resp:
-            response = await resp.json()
-            return response
-
-
-async def get_username_history(uuid: int) -> list:
-    res = await async_get(f"https://api.mojang.com/user/profiles/{uuid}/names")
-    page = []
-    for i in reversed(res):
-        if "changedToAt" in i:
-            page.append(f'**{i["name"]}** - <t:{round(i["changedToAt"]/1000)}>')
-        else:
-            page.append(f'**{i["name"]}**')
-    return page
-
-
 async def get_textures(uuid: int) -> list:
+    """Get the textures for a given UUID."""
     res = await async_get(
         f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}"
     )
@@ -41,6 +25,7 @@ async def get_textures(uuid: int) -> list:
 async def ping_server(
     server: str, plugins: bool, ctx: discord.ApplicationContext = None
 ) -> discord.Embed:
+    """Pings a Minecraft server and returns an embed with the results."""
     try:
         target = await JavaServer.async_lookup(address=server)
 
