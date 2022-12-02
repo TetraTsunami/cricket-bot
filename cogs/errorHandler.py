@@ -9,7 +9,7 @@ from discord import Webhook
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from cogs.utils.embed import command_embed
+from Utilities.format import command_embed
 
 logger = logging.getLogger("discord")
 
@@ -37,8 +37,12 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
                 ephemeral=True,
             )
             return
+        # Uh oh! It's not a cooldown error, so we need to reset the cooldown (if we can), log it, and give a response.
+        try:
+            await ctx.command.reset_cooldown(ctx)
+        except:
+            pass
 
-        # If we can't handle this, log the error & give the user a response
         if error_webhook_url:
             async with aiohttp.ClientSession() as session:
                 webhook = Webhook.from_url(error_webhook_url, session=session)
@@ -64,11 +68,7 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
             exc_info=(type(error), error, error.__traceback__),
         )
 
-        logString = (
-            f", and the error has been logged."
-            if error_webhook_url
-            else "."
-        )
+        logString = f", and the error has been logged." if error_webhook_url else "."
         inviteString = (
             f"or join my [support server]({support_invite}) in the meantime."
             if support_invite
@@ -79,7 +79,7 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
                 ctx,
                 title=f"/{ctx.command.qualified_name}",
                 icon="❌",
-                body=f"Something went terribly wrong while executing the command /{ctx.command.qualified_name}{logString} Try again in a little while, {inviteString} ```{error}```"
+                body=f"Something went terribly wrong while executing the command /{ctx.command.qualified_name}{logString} Try again in a little while, {inviteString} ```{error}```",
             ),
             ephemeral=True,
         )

@@ -1,8 +1,7 @@
 import re
 
 import discord
-from cogs.utils.embed import command_embed
-from cogs.utils.view import LinkButton
+from Utilities.format import command_embed, LinkButtons
 from discord.commands import Option, SlashCommandGroup
 from discord.ext import commands
 
@@ -48,9 +47,9 @@ class DiscordCog(commands.Cog):
         )
         if user.banner.url:
             embed.set_image(url=user.banner.url)
-            view = LinkButton(ctx=ctx, buttons={"Download Avatar": user.avatar.url, "Download Banner": user.banner.url})
+            view = LinkButtons(ctx=ctx, buttons={"Download Avatar": user.avatar.url, "Download Banner": user.banner.url})
         else:
-            view = LinkButton(ctx=ctx, buttons={"Download Avatar": user.avatar.url})
+            view = LinkButtons(ctx=ctx, buttons={"Download Avatar": user.avatar.url})
         member = ctx.guild.get_member(user.id)
         if member:
             embed.add_field(
@@ -59,6 +58,7 @@ class DiscordCog(commands.Cog):
         await ctx.respond(embed=embed, view=view, ephemeral=hidden)
         
     @discord_utils.command(description="Returns info about this server")
+    @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.guild_only()
     async def server(self, ctx: commands.Context, hidden: Option(bool, "Show results in an ephemeral message", required=False) = False):
         embed = (
@@ -72,12 +72,13 @@ class DiscordCog(commands.Cog):
         )
         if ctx.guild.banner:
             embed.set_image(url=ctx.guild.banner.url)
-            view = LinkButton(ctx=ctx, buttons={"Download Icon": ctx.guild.icon.url, "Download Banner": ctx.guild.banner.url})
+            view = LinkButtons(ctx=ctx, buttons={"Download Icon": ctx.guild.icon.url, "Download Banner": ctx.guild.banner.url})
         else:
-            view = LinkButton(ctx=ctx, buttons={"Download Icon": ctx.guild.icon.url})
+            view = LinkButtons(ctx=ctx, buttons={"Download Icon": ctx.guild.icon.url})
         await ctx.respond(embed=embed, view=view, ephemeral=hidden)
 
     @discord_utils.command(description="Returns info about a custom emoji")
+    @commands.cooldown(1, 1, commands.BucketType.member)
     async def emote(self, ctx, emoji: Option(str, "The emoji you'd like to download"), hidden: Option(bool, "Show results in an ephemeral message", required=False) = False):
         if not re.search("^<.?:.*:.*>$", emoji):
             return await ctx.respond(
@@ -92,7 +93,7 @@ class DiscordCog(commands.Cog):
         if re.search(r"^<a:", emoji):
             animated = True
         imageURL = url(id, animated)
-        view = LinkButton(ctx=ctx, buttons={"Download Emoji": imageURL})
+        view = LinkButtons(ctx=ctx, buttons={"Download Emoji": imageURL})
         embed = (
             command_embed(title="Emoji", imageUrl=imageURL, ctx=ctx)
             .add_field(name="Name", value=f"`{name}`")

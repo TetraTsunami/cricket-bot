@@ -2,7 +2,7 @@ import json
 import os
 
 import discord
-from cogs.utils.embed import command_embed
+from Utilities.format import command_embed
 from discord.commands import Option
 from discord.ext import commands
 

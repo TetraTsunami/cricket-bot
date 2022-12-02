@@ -1,15 +1,14 @@
 import json
 import re
-import socket
 
 import discord
-from discord.commands import Option, SlashCommandGroup, slash_command
+from discord.commands import Option, SlashCommandGroup
 from discord.ext import commands
 from discord.ext.commands.context import Context
 
-from .utils.embed import command_embed
-from .utils.minecraft import async_get, get_textures, get_username_history, ping_server
-from .utils.view import LinkButton
+from Utilities.format import command_embed, LinkButtons
+from Utilities.minecraft import get_textures, ping_server
+from Utilities.web import async_get
 
 # Get configuration.json
 with open("configuration.json", "r") as config:
@@ -53,6 +52,8 @@ class MinecraftCog(commands.Cog):
     minecraft_utils = SlashCommandGroup("minecraft", "Commands related to Minecraft.")
 
     @minecraft_utils.command(description="Returns info about a server")
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.max_concurrency(1, wait=True)
     async def server(
         self,
         ctx: Context,
@@ -72,6 +73,7 @@ class MinecraftCog(commands.Cog):
             await ctx.respond(embed=embed, ephemeral=True)
 
     @minecraft_utils.command(description="Returns info about a Minecraft account")
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def user(
         self,
         ctx: Context,
@@ -95,9 +97,8 @@ class MinecraftCog(commands.Cog):
         uuid = json.loads(usnam.content)["id"]
         # Get profile of uuid
         textures = await get_textures(uuid)
-        history = await get_username_history(uuid)
 
-        view = LinkButton(
+        view = LinkButtons(
             ctx,
             buttons={
                 "Skin Download": textures["textures"]["SKIN"]["url"],
@@ -114,7 +115,6 @@ class MinecraftCog(commands.Cog):
             imageUrl=f"https://mc-heads.net/body/{uuid}",
         )
         embed.add_field(name="UUID", value=textures["profileId"])
-        embed.add_field(name="Username History", value="\n".join(history), inline=False)
         embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{uuid}")
         await ctx.respond(embed=embed, view=view, ephemeral=hidden)
 
