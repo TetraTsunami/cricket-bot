@@ -14,9 +14,9 @@ aiohttp = "^3.8.1"
 text-to-owo = "^2.0.1"
 numpy = "^1.23.2"
 requests = "^2.28.2"
-black = "^23.1.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

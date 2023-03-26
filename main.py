@@ -5,6 +5,11 @@ import os
 import discord
 from discord.ext import commands
 
+if not os.path.exists("logs"):
+    os.mkdir("logs")
+if not os.path.exists("work"):
+    os.mkdir("work")
+    
 # Set up logging
 fileHandler = logging.FileHandler(
     filename="logs/discord.log", encoding="utf-8", mode="w"
@@ -62,10 +67,10 @@ def list_cogs(cogs_dir):
 
 
 if __name__ == "__main__":
-    if not os.path.exists("work"):
-        os.mkdir("work")
     foundCogs = list_cogs(COGS_DIRECTORY)
-    foundCogs.remove("dev") if not debug_guild else logger.info(
+    if not debug_guild and "dev" in foundCogs:
+        foundCogs.remove("dev")
+    logger.info(
         f"Loading cogs: {foundCogs}"
     )
     for extension in foundCogs:

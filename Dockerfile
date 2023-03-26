@@ -1,17 +1,26 @@
 # syntax=docker/dockerfile:1
 
 # Grab Python, make a directory to store everything
-FROM python:3.10-slim
+FROM python:3.10.4-slim-buster
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    POETRY_VERSION=1.3.2
+
+# Get Poetry
+RUN pip install "poetry==$POETRY_VERSION"
+
+# Copy just the requirements for caching
 WORKDIR /app
+COPY poetry.lock pyproject.toml ./
 
-# Grab requirements
-RUN apt-get update && apt-get install -y git
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+# Install dependencies
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-dev --no-root --no-interaction --no-ansi 
 
-# Grab everything else
+# Cop everything else
 COPY . .
 
 # Get inside
 ENTRYPOINT ["python3"]
-CMD ["-u", "bot.py"]
+CMD ["-u", "main.py"]
