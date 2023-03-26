@@ -1,9 +1,0 @@
-# git+https://github.com/Pycord-Development/pycord@4d80dd5
-py-cord==2.0.0rc1
-python-dotenv==0.20.0
-mcstatus==9.0.4
-Pillow==9.1.0
-requests==2.27.1
-aiohttp==3.8.1
-text-to-owo==2.0.1
-numpy==1.22.3

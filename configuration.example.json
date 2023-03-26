@@ -1,0 +1,24 @@
+{
+	"token": "token",
+	"prefix": "!c",
+	"activity": "crickets, chirp!",
+	"support_invite": "link",
+	"owner_id": 1,
+	"error_webhook_url": "link",
+	"icons": {
+		"minecraft": "a",
+		"discord": "a",
+		"success": "a",
+		"warning": "a",
+		"failure": "a"
+	},
+	"apis": {
+		"imgflip": {
+			"username": "us",
+			"password": "pw"
+		},
+		"deepmoji": {
+			"url": "link"
+		}
+	}
+}

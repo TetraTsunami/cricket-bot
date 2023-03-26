@@ -1,8 +1,7 @@
-
-import requests
+import aiohttp
 import re
 
-def get_emoji(query: str, url: str, min_prob: int = 0.05, results: int = 5) -> list:
+async def get_emoji(query: str, url: str, min_prob: int = 0.05, results: int = 5) -> list:
     """
     Get the top emoji for qiven string using a Deepmoji API instance
     
@@ -20,16 +19,11 @@ def get_emoji(query: str, url: str, min_prob: int = 0.05, results: int = 5) -> l
         x = re.sub("[<>:'\"\?]|\d{5,}","",query)
         data = {"sentences":[(x)]}
         payload = str(data).replace("'","\"")
-        r = requests.post(url, data=payload.encode('utf-8'))
-        r.raise_for_status()
-        response = r.json()['emoji'][0]
-        def get_prob(e):
-            return e['prob']
-        response.sort(reverse=True, key=get_prob)
-        ret = []
-        for i in response[:results]:
-            if i['prob'] > min_prob: ret.append(i)
-            else: return ret
-        return ret
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, data=payload.encode('utf-8')) as r:
+                r.raise_for_status()
+                response = (await r.json())['emoji'][0]
+        response.sort(reverse=True, key=lambda e: e['prob'])
+        return [i for i in response[:results] if i['prob'] > min_prob]
     else:
         return []

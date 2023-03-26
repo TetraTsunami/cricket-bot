@@ -1,6 +1,7 @@
 #💕 https://github.com/TymanWasTaken/pyimgflip
 
 import requests
+# TODO: add aiohttp support
 
 __author__ = 'Corey Hoard'
 __version__ = '1.0.0'
@@ -149,7 +150,7 @@ class Meme(object):
         height (int): Image height in pixels.
     """
 
-    def __init__(self, id, name='', url='', width=0, height=0, box_count=0):
+    def __init__(self, id, name='', url='', width=0, height=0, box_count=0, **kwargs):
         """
         Create a new Meme instance
 

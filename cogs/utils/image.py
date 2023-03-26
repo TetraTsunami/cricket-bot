@@ -23,7 +23,19 @@ class TextBox:
         optional (bool, optional): Whether the text box is optional. Defaults to False.
     """
 
-    def __init__(self, pos, dimensions, font, fontsize=14, text_color=(0, 0, 0), allowWrap=True, minFontsize: int = 0, angle: int = 0, skew: list = [], optional=False):
+    def __init__(
+        self,
+        pos,
+        dimensions,
+        font,
+        fontsize=14,
+        text_color=(0, 0, 0),
+        allowWrap=True,
+        minFontsize: int = 0,
+        angle: int = 0,
+        skew: list = [],
+        optional=False,
+    ):
         self.pos = pos
         self.dimensions = dimensions
         self.font = font
@@ -42,7 +54,13 @@ class TextBox:
         self.optional = optional
 
 
-def text_to_png(text: str, fp="./image_gen/image_gen.png", size=12, color=(255, 255, 0), font='./image_gen/Minecraftia-Regular.ttf'):
+def text_to_png(
+    text: str,
+    fp="./work/image_gen.png",
+    size=12,
+    color=(255, 255, 0),
+    font="./static/font/Minecraftia-Regular.ttf",
+):
     """Writes text to an image
 
     Args:
@@ -61,7 +79,7 @@ def text_to_png(text: str, fp="./image_gen/image_gen.png", size=12, color=(255, 
     image.save(fp)
 
 
-def transparency(fp="./image_gen/image_gen.png"):
+def transparency(fp="./work/image_gen.png"):
     """Turns an image into a transparent image
 
     Args:
@@ -81,7 +99,7 @@ def transparency(fp="./image_gen/image_gen.png"):
             newData.append(item)  # other colours remain unchanged
 
     rgba.putdata(newData)
-    rgba.save("./image_gen/transparent_image_gen.png", "PNG")
+    rgba.save("./work/transparent_image_gen.png", "PNG")
 
 
 def wrap_text(text: str, width: int, font: ImageFont, break_words: bool = False):
@@ -103,7 +121,7 @@ def wrap_text(text: str, width: int, font: ImageFont, break_words: bool = False)
     lines = []
     height = 0
     line = ""
-    lineheight = font.getsize("bdfghijklpqty")[1]-11
+    lineheight = font.getsize("bdfghijklpqty")[1] - 11
     if break_words:
         for letter in list(text):
             if font.getsize(line + letter)[0] > width:
@@ -122,7 +140,8 @@ def wrap_text(text: str, width: int, font: ImageFont, break_words: bool = False)
                 line += word + " "
     if font.getsize(line)[0] > width:
         raise ValueError(
-            "Text is too long to fit in the given width without overflowing")
+            "Text is too long to fit in the given width without overflowing"
+        )
     lines.append(line)
     height += font.getsize(line)[1]
     return lines, height
@@ -148,24 +167,23 @@ def resize_and_wrap_text(text, box: TextBox):
         # Text is simply too thicc. We need to go smaller until it isn't.
         while True:
             try:
-                font = ImageFont.truetype(box.font, font.size-1)
+                font = ImageFont.truetype(box.font, font.size - 1)
                 if font.size <= box.minFontsize:
                     # If our font size goes below our minimum, we can't fit the text in the box without breaking someone's kneecaps. Let's enter KNEECAP BREAKING MODE and try again from the top.
                     break_words = True
                     font = ImageFont.truetype(box.font, box.fontsize)
-                lines, height = wrap_text(
-                    text, box.dimensions[0], font, break_words)
+                lines, height = wrap_text(text, box.dimensions[0], font, break_words)
                 break
             except ValueError:
                 continue
     if height > box.dimensions[1]:
         # Text is taller than the box, we can't fit it. Let's try again, but smaller.
         while height > box.dimensions[1]:
-            font = ImageFont.truetype(box.font, font.size-1)
-            lines, height = wrap_text(
-                text, box.dimensions[0], font, break_words)
+            font = ImageFont.truetype(box.font, font.size - 1)
+            lines, height = wrap_text(text, box.dimensions[0], font, break_words)
         # Now it should fit.
     return lines, font.size
+
 
 # function copy-pasted from https://stackoverflow.com/a/14178717/744230
 
@@ -173,22 +191,27 @@ def resize_and_wrap_text(text, box: TextBox):
 def find_coeffs(source_coords, target_coords):
     matrix = []
     for s, t in zip(source_coords, target_coords):
-        matrix.append([t[0], t[1], 1, 0, 0, 0, -s[0]*t[0], -s[0]*t[1]])
-        matrix.append([0, 0, 0, t[0], t[1], 1, -s[1]*t[0], -s[1]*t[1]])
+        matrix.append([t[0], t[1], 1, 0, 0, 0, -s[0] * t[0], -s[0] * t[1]])
+        matrix.append([0, 0, 0, t[0], t[1], 1, -s[1] * t[0], -s[1] * t[1]])
     A = numpy.matrix(matrix, dtype=float)
     B = numpy.array(source_coords).reshape(8)
     res = numpy.dot(numpy.linalg.inv(A.T * A) * A.T, B)
     return numpy.array(res).reshape(8)
 
 
-def draw_text_to_image(TextBox, text, inputPath="./image_gen/image_gen.png", outputPath="./image_gen/image_gen.png"):
+def draw_text_to_image(
+    TextBox,
+    text,
+    inputPath="./work/image_gen.png",
+    outputPath="./image_gen/image_gen.png",
+):
     """Draws the given text to an image
 
     Args:
         TextBox (TextBox): The text box to draw.
         text (str): The text to draw.
-        inputPath (str): Path to the image to draw the text on top of. Defaults to "./image_gen/image_gen.png".
-        outputPath (str): Path to save the image to. Defaults to "./image_gen/image_gen.png".
+        inputPath (str): Path to the image to draw the text on top of. Defaults to "./work/image_gen.png".
+        outputPath (str): Path to save the image to. Defaults to "./work/image_gen.png".
     """
     img = Image.open(inputPath)
     draw = ImageDraw.Draw(img)
@@ -203,16 +226,19 @@ def draw_text_to_image(TextBox, text, inputPath="./image_gen/image_gen.png", out
         font = ImageFont.truetype(TextBox.font, TextBox.fontsize)
     if (TextBox.angle == 0) and (TextBox.skew == 0):
         # If the text is not skewed or rotated, we can use the built-in function
-        draw.multiline_text(TextBox.pos, textWrapped,
-                            font=font, fill=TextBox.text_color, spacing=-4)
+        draw.multiline_text(
+            TextBox.pos, textWrapped, font=font, fill=TextBox.text_color, spacing=-4
+        )
     else:
         # If the text is rotated or skewed, we need to make a new image, draw the text on it, and then rotate/skew *that*
         img_txt = Image.new("RGBA", TextBox.dimensions, (0, 0, 0, 0))
         draw_txt = ImageDraw.Draw(img_txt)
-        draw_txt.multiline_text((0, 0), textWrapped,
-                                font=font, fill=TextBox.text_color, spacing=-4)
+        draw_txt.multiline_text(
+            (0, 0), textWrapped, font=font, fill=TextBox.text_color, spacing=-4
+        )
         img_txt = img_txt.rotate(
-            TextBox.angle, expand=1, resample=Image.Resampling.BICUBIC)
+            TextBox.angle, expand=1, resample=Image.Resampling.BICUBIC
+        )
 
         x = TextBox.pos[0]
         y = TextBox.pos[1]
@@ -223,11 +249,17 @@ def draw_text_to_image(TextBox, text, inputPath="./image_gen/image_gen.png", out
             y = TextBox.pos[1] - (TextBox.dimensions[0] * math.sin(angle))
         elif 90 <= TextBox.angle % 360 < 180:
             x = TextBox.pos[0] - (TextBox.dimensions[0] * math.sin(angle))
-            y = TextBox.pos[1] - (TextBox.dimensions[0] * math.cos(angle)) - \
-                (TextBox.dimensions[1] * math.sin(angle))
+            y = (
+                TextBox.pos[1]
+                - (TextBox.dimensions[0] * math.cos(angle))
+                - (TextBox.dimensions[1] * math.sin(angle))
+            )
         elif 180 <= TextBox.angle % 360 < 270:
-            x = TextBox.pos[0] - (TextBox.dimensions[0] * math.cos(angle)) - \
-                (TextBox.dimensions[1] * math.sin(angle))
+            x = (
+                TextBox.pos[0]
+                - (TextBox.dimensions[0] * math.cos(angle))
+                - (TextBox.dimensions[1] * math.sin(angle))
+            )
             y = TextBox.pos[1] - (TextBox.dimensions[1] * math.cos(angle))
         elif 270 <= TextBox.angle % 360 < 360:
             x = TextBox.pos[0] - (TextBox.dimensions[1] * math.cos(angle))
@@ -239,14 +271,19 @@ def draw_text_to_image(TextBox, text, inputPath="./image_gen/image_gen.png", out
     img.save(outputPath)
 
 
-def compress_image(width, height="-1", inputPath="./image_gen/image_gen.png", outputPath="./image_gen/image_gen.png"):
+def compress_image(
+    width,
+    height=-1,
+    inputPath="./work/image_gen.png",
+    outputPath="./work/image_gen.png",
+):
     """Compresses an image to given dimensions.
 
     Args:
         width (int): The width to compress the image to.
         height (int): The height to compress the image to. Defaults to "-1", which preserves the aspect ratio.
-        inputPath (str): Path to the image to compress. Defaults to "./image_gen/image_gen.png".
-        outputPath (str): Path to save the compressed image to. Defaults to "./image_gen/image_gen.png".
+        inputPath (str): Path to the image to compress. Defaults to "./work/image_gen.png".
+        outputPath (str): Path to save the compressed image to. Defaults to "./work/image_gen.png".
     """
     img = Image.open(inputPath)
     aspect_ratio = img.width / img.height
@@ -257,7 +294,12 @@ def compress_image(width, height="-1", inputPath="./image_gen/image_gen.png", ou
     img.save(outputPath, "PNG")
 
 
-def image_overlay(inputPath: str = "./image_gen/image_gen.png", outputPath: str = "./image_gen/image_gen.png", overlayPath: str = "./image_gen/image_gen.png", position: tuple = (0, 0)):
+def image_overlay(
+    inputPath: str = "./image_gen/image_gen.png",
+    outputPath: str = "./image_gen/image_gen.png",
+    overlayPath: str = "./image_gen/image_gen.png",
+    position: tuple = (0, 0),
+):
     """Overlays an image on top of another image with transparency.
 
     Args:
@@ -272,7 +314,8 @@ def image_overlay(inputPath: str = "./image_gen/image_gen.png", outputPath: str 
         img = img.convert("RGBA")
     img.alpha_composite(overlay, (position))
     img.save(outputPath)
-    
+
+
 # img = Image.open("./test.png")
 
 # coeffs = find_coeffs(
