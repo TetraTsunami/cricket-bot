@@ -24,7 +24,7 @@ class DiscordCog(commands.Cog):
     async def user(
         self,
         ctx: commands.Context,
-        target: Option(str, "The user you would like to harass") = None,
+        target: Option(str, "User (@mention or id)") = None,
         hidden: Option(
             bool, "Show results in an ephemeral message", required=False
         ) = False,

@@ -66,6 +66,11 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
             return
 
         # If we can't handle this, log the error & give the user a response
+        try:
+            options = [f"{e['name']}={e['value']}" for e in ctx.interaction.data['options']]
+        except Exception as e:
+            print(e)
+            options = []
         if error_webhook_url:
             async with aiohttp.ClientSession() as session:
                 webhook = Webhook.from_url(error_webhook_url, session=session)
@@ -76,7 +81,7 @@ class ErrorHandlerCog(commands.Cog, name="on command error"):
                         description=f"```{''.join(traceback.format_exception(type(error), error, error.__traceback__))}```",
                         color=0xFF0000,
                     )
-                    .add_field(name="Command", value=f"/{ctx.command.qualified_name}")
+                    .add_field(name="Command", value=f"/{ctx.command.qualified_name} {' '.join(options)}")
                     .add_field(name="User", value=f"{ctx.author} ({ctx.author.id})")
                     .add_field(name="Guild", value=f"{ctx.guild} ({ctx.guild.id})")
                 )

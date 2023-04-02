@@ -20,6 +20,8 @@ class LinkButton(discord.ui.View):
         self.ctx = ctx
         self.message: discord.Message = None
         for label in buttons:
+            if buttons[label] is None:
+                continue
             self.add_item(
                 discord.ui.Button(
                     label=label, style=discord.ButtonStyle.link, url=buttons[label]

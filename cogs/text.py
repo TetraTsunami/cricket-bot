@@ -16,7 +16,7 @@ class Utilities(commands.Cog):
     async def owoify(self, ctx, text: Option(str, "What you'd like to say")):
         owotext = owo.owo(text)
         await ctx.respond(
-            embed=command_embed("Owoify", "", owotext, ctx=ctx), ephemeral=True
+            embed=command_embed(ctx, "Owoify", "", owotext), ephemeral=True
         )
 
 
