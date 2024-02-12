@@ -35,7 +35,7 @@ class Autoresponder(commands.Cog):
             return
 
         SIMPLERESPONSE = [
-            ["(?i)^I'm.+back.*", "hi back"],
+            ["(?i)^I'm\s+back.*", "hi back"],
             ["(?i)^Hi back.*", "i'm the only one that gets to say that, clown"],
             ["(?i)^Hi the only one.*", "...stop it"],
             [
@@ -53,15 +53,13 @@ class Autoresponder(commands.Cog):
                         "i'm literally right here wow",
                         "yep, that's me!",
                         "hi!!",
-                        "wazzaap",
+                        "what's up?",
                         "👀",
                         "i'm not sure i agree, but okay?",
                         "your feedback has been noted. we'll ignore that.",
                     ]
                 ),
             ],
-            ["(?i).*bread.*", "<:loaf_slice:960335609589796935>"],
-            ["(?i).*loaf.*", "<:loaf_end:960335609430442045>"],
             ["(?i)^waku.?.?waku.?$", "hooray!"],
         ]
         for i in SIMPLERESPONSE:
